@@ -14,11 +14,17 @@ export default function Navbar() {
               </Link>
             </div>
             <div className="hidden md:ml-6 md:flex md:space-x-8">
-              <Link href="/">
-                <a className="border-b-2 border-accent text-white px-1 pt-1 text-sm font-medium">Obfuscator</a>
-              </Link>
-              <a href="#" className="border-transparent text-gray-300 hover:text-white hover:border-gray-300 px-1 pt-1 border-b-2 text-sm font-medium">Documentation</a>
-              <a href="#" className="border-transparent text-gray-300 hover:text-white hover:border-gray-300 px-1 pt-1 border-b-2 text-sm font-medium">API</a>
+              <div className="border-b-2 border-accent px-1 pt-1">
+                <Link href="/">
+                  <span className="text-white text-sm font-medium cursor-pointer">Obfuscator</span>
+                </Link>
+              </div>
+              <div className="border-transparent border-b-2 px-1 pt-1 hover:border-gray-300">
+                <span className="text-gray-300 hover:text-white text-sm font-medium cursor-pointer">Documentation</span>
+              </div>
+              <div className="border-transparent border-b-2 px-1 pt-1 hover:border-gray-300">
+                <span className="text-gray-300 hover:text-white text-sm font-medium cursor-pointer">API</span>
+              </div>
             </div>
           </div>
           <div className="flex items-center">
