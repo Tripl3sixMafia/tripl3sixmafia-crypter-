@@ -23,13 +23,22 @@ export default function ProcessingState() {
   }, []);
 
   return (
-    <div className="mb-6 bg-secondary rounded-lg p-6 text-center">
+    <div className="mb-8 bg-gray-800 rounded-lg p-8 text-center border border-gray-700">
       <div className="animate-pulse">
-        <i className="fas fa-cog fa-spin text-4xl text-accent mb-4"></i>
-        <h3 className="text-lg font-medium text-white mb-2">Processing Your Code...</h3>
-        <p className="text-gray-400">This may take a moment depending on file size and complexity.</p>
-        <div className="w-full mt-4">
-          <Progress value={progress} className="h-2.5 bg-gray-700" indicatorClassName="bg-accent" />
+        <div className="text-purple-500 text-5xl mb-6">
+          <i className="fas fa-cog fa-spin"></i>
+        </div>
+        <h3 className="text-xl font-semibold text-white mb-3">Obfuscating Your Code...</h3>
+        <p className="text-gray-300 mb-6">
+          We're applying multiple layers of protection to your code.
+          This may take a moment depending on file size and complexity.
+        </p>
+        <div className="w-full max-w-md mx-auto mt-4">
+          <Progress 
+            value={progress} 
+            className="h-3 bg-gray-700" 
+          />
+          <p className="text-gray-400 text-sm mt-2">{progress}% complete</p>
         </div>
       </div>
     </div>

@@ -2,52 +2,63 @@ import React from "react";
 
 export default function InfoSection() {
   return (
-    <div className="mt-12 px-4">
+    <div className="mt-16 px-4">
       <div className="max-w-5xl mx-auto">
-        <h2 className="text-2xl font-bold text-white mb-6 text-center">How Code Obfuscation Protects Your Software</h2>
+        <h2 className="text-3xl font-bold mb-8 text-center bg-gradient-to-r from-purple-400 to-pink-500 text-transparent bg-clip-text">
+          Why Choose DlinqntShield?
+        </h2>
         
         <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-secondary rounded-lg p-6">
-            <div className="text-accent text-2xl mb-4">
+          <div className="bg-gray-800 rounded-lg p-8 border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-1">
+            <div className="text-purple-500 text-3xl mb-5 flex justify-center">
               <i className="fas fa-random"></i>
             </div>
-            <h3 className="text-lg font-medium text-white mb-2">Name Mangling</h3>
-            <p className="text-gray-400 text-sm">
-              Replaces meaningful variable and function names with random characters, making it extremely difficult for humans to understand the code's purpose.
+            <h3 className="text-xl font-semibold text-white mb-3 text-center">Name & Property Mangling</h3>
+            <p className="text-gray-300 text-center">
+              Replaces meaningful identifiers with random characters, making it extremely difficult to understand the code's purpose and structure.
             </p>
           </div>
           
-          <div className="bg-secondary rounded-lg p-6">
-            <div className="text-accent text-2xl mb-4">
+          <div className="bg-gray-800 rounded-lg p-8 border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-1">
+            <div className="text-purple-500 text-3xl mb-5 flex justify-center">
               <i className="fas fa-lock"></i>
             </div>
-            <h3 className="text-lg font-medium text-white mb-2">String Encryption</h3>
-            <p className="text-gray-400 text-sm">
-              Encrypts string literals in your code, preventing attackers from finding sensitive information or understanding program flow by analyzing text.
+            <h3 className="text-xl font-semibold text-white mb-3 text-center">Advanced String Encryption</h3>
+            <p className="text-gray-300 text-center">
+              Encrypts string literals in your code to prevent reverse engineers from finding sensitive information or understanding program flow.
             </p>
           </div>
           
-          <div className="bg-secondary rounded-lg p-6">
-            <div className="text-accent text-2xl mb-4">
+          <div className="bg-gray-800 rounded-lg p-8 border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-1">
+            <div className="text-purple-500 text-3xl mb-5 flex justify-center">
               <i className="fas fa-project-diagram"></i>
             </div>
-            <h3 className="text-lg font-medium text-white mb-2">Control Flow Obfuscation</h3>
-            <p className="text-gray-400 text-sm">
-              Restructures the control flow of your code, making it nearly impossible to follow the execution path and understand the program's logic.
+            <h3 className="text-xl font-semibold text-white mb-3 text-center">Control Flow Flattening</h3>
+            <p className="text-gray-300 text-center">
+              Restructures your code's execution path, making it virtually impossible to follow the logic or create accurate decompilations.
             </p>
           </div>
         </div>
         
-        <div className="mt-10 text-center">
-          <p className="text-gray-400 mb-6">
-            Remember: While obfuscation significantly increases the difficulty of reverse engineering, it cannot make your code 100% secure. <br />
-            For critical applications, combine obfuscation with other security measures.
-          </p>
-          
-          <a href="#" className="inline-flex items-center text-accent hover:text-accent/80">
-            Learn more about code security best practices
-            <i className="fas fa-arrow-right ml-1"></i>
-          </a>
+        <div className="mt-16 bg-gradient-to-r from-purple-900/30 to-pink-900/30 p-8 rounded-xl border border-purple-800/50">
+          <div className="flex flex-col md:flex-row items-center">
+            <div className="text-purple-400 text-4xl mr-6 hidden md:block">
+              <i className="fas fa-shield-alt"></i>
+            </div>
+            <div>
+              <h3 className="text-xl font-semibold text-white mb-2">Protection Beyond Obfuscation</h3>
+              <p className="text-gray-300">
+                While obfuscation significantly increases the difficulty of reverse engineering, we recommend combining it with other security measures for mission-critical applications. Our enterprise solutions offer additional protections like anti-tampering, secure licensing, and runtime application self-protection.
+              </p>
+              
+              <div className="mt-4">
+                <a href="#" className="inline-flex items-center text-purple-400 hover:text-purple-300 font-medium">
+                  Learn more about our enterprise security solutions
+                  <i className="fas fa-arrow-right ml-2"></i>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
