@@ -17,6 +17,47 @@
   }
 }
 
+@layer utilities {
+  /* Text gradient effect */
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+  }
+  
+  /* Gradient button hover effect */
+  .gradient-btn-hover {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+  }
+  
+  .gradient-btn-hover:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to right, theme('colors.purple.700'), theme('colors.pink.700'));
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  
+  .gradient-btn-hover:hover:after {
+    opacity: 1;
+  }
+  
+  /* Card hover effect */
+  .card-hover {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  }
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
