@@ -34,10 +34,12 @@ export default function ProcessingState() {
           This may take a moment depending on file size and complexity.
         </p>
         <div className="w-full max-w-md mx-auto mt-4">
-          <Progress 
-            value={progress} 
-            className="h-3 bg-gray-700" 
-          />
+          <div className="progress-bar-gradient">
+            <Progress 
+              value={progress} 
+              className="h-3 bg-gray-700" 
+            />
+          </div>
           <p className="text-gray-400 text-sm mt-2">{progress}% complete</p>
         </div>
       </div>
