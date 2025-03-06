@@ -112,15 +112,18 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
 
   return (
     <div className="mb-8">
-      <h2 className="text-xl font-semibold text-white mb-5">Upload Your Code</h2>
+      <h2 className="text-2xl font-bold text-white mb-5 flex items-center">
+        <i className="fas fa-file-code text-gradient bg-gradient-to-r from-purple-400 to-pink-500 mr-3"></i>
+        Upload Your Code
+      </h2>
       <div 
         className={`relative ${
           isDragging 
-            ? "bg-gray-800 border-2 border-dashed border-purple-500" 
+            ? "bg-gray-800/40 backdrop-blur-sm border-2 border-dashed border-purple-500 shadow-lg" 
             : fileName 
-              ? "bg-gray-800 border border-gray-700" 
-              : "bg-gray-800/60 border-2 border-dashed border-gray-700 hover:border-gray-500"
-        } rounded-lg transition-all duration-200`}
+              ? "bg-gray-800/60 backdrop-blur-sm border border-gray-700/80 shadow-md" 
+              : "bg-gray-800/40 backdrop-blur-sm border-2 border-dashed border-gray-600 hover:border-purple-500/60 shadow-md hover:shadow-lg"
+        } rounded-xl transition-all duration-300`}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
         onDragOver={handleDragOver}
@@ -128,26 +131,26 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
       >
         {/* Border gradient animation when dragging */}
         {isDragging && (
-          <div className="absolute inset-0 rounded-lg bg-purple-500/10 pointer-events-none"></div>
+          <div className="absolute inset-0 rounded-xl bg-purple-500/10 animate-pulse pointer-events-none"></div>
         )}
         
         {fileName ? (
           <div className="p-8">
-            <div className="flex items-center">
-              <div className="w-14 h-14 rounded-lg bg-gray-700 flex items-center justify-center mr-5">
-                <i className={`${getFileIcon()} text-3xl text-gradient bg-gradient-to-r from-purple-500 to-pink-500`}></i>
+            <div className="flex flex-col md:flex-row md:items-center">
+              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/50 flex items-center justify-center mb-4 md:mb-0 md:mr-6 shadow-glow">
+                <i className={`${getFileIcon()} text-3xl text-gradient bg-gradient-to-r from-purple-400 to-pink-500`}></i>
               </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold text-white mb-1 truncate max-w-md">{fileName}</h3>
+              <div className="flex-1 mb-4 md:mb-0">
+                <h3 className="text-lg font-semibold text-white mb-2 truncate max-w-md">{fileName}</h3>
                 <div className="flex items-center">
-                  <span className="text-sm text-gray-400">{fileSize}</span>
+                  <span className="text-sm text-gray-400 bg-gray-800/60 px-3 py-1 rounded-full">{fileSize}</span>
                   <span className="mx-2 text-gray-600">•</span>
-                  <span className="text-sm text-purple-400">{selectedLanguage}</span>
+                  <span className="text-sm text-gradient bg-gradient-to-r from-purple-400 to-pink-400 font-medium">{selectedLanguage}</span>
                 </div>
               </div>
               <div className="flex space-x-3">
                 <button 
-                  className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-2 rounded-md text-sm transition-colors"
+                  className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-all duration-200 border border-gray-700 hover:border-gray-600"
                   onClick={() => {
                     setFileName(null);
                     setFileSize(null);
@@ -160,7 +163,7 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
                   <i className="fas fa-trash-alt mr-2"></i> Remove
                 </button>
                 <button 
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-3 py-2 rounded-md text-sm transition-all"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-2 rounded-lg text-sm transition-all duration-200 shadow-md hover:shadow-lg"
                   onClick={() => {
                     if (fileInputRef.current) {
                       fileInputRef.current.click();
@@ -173,17 +176,17 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
             </div>
           </div>
         ) : (
-          <div className="p-10 text-center">
+          <div className="p-12 text-center">
             <div className="flex flex-col items-center justify-center">
-              <div className="w-20 h-20 bg-gray-700/70 rounded-full flex items-center justify-center mb-6">
-                <i className="fas fa-cloud-upload-alt text-4xl text-gradient bg-gradient-to-r from-purple-500 to-pink-500"></i>
+              <div className="w-24 h-24 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl flex items-center justify-center mb-8 border border-gray-700/50 shadow-glow float-animation">
+                <i className="fas fa-cloud-upload-alt text-4xl text-gradient bg-gradient-to-r from-purple-400 to-pink-500"></i>
               </div>
-              <h3 className="text-xl font-semibold text-white mb-3">Drag & Drop Your Code</h3>
-              <p className="text-gray-400 mb-6 max-w-md">
-                Upload your {selectedLanguage} source code to obfuscate and protect
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-4">Drag & Drop Your Code</h3>
+              <p className="text-gray-300 mb-8 max-w-md">
+                Upload your {selectedLanguage} source code to obfuscate and protect it from reverse engineering
               </p>
               <button
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-3 px-8 rounded-md text-sm shadow-lg transition-all"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-3 px-8 rounded-lg text-sm shadow-glow transition-all duration-200"
                 onClick={() => {
                   if (fileInputRef.current) {
                     fileInputRef.current.click();
@@ -192,7 +195,8 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
               >
                 <i className="fas fa-file-upload mr-2"></i> Browse Files
               </button>
-              <p className="mt-6 text-gray-500 text-sm">
+              <p className="mt-8 text-gray-500 text-sm flex items-center">
+                <i className="fas fa-info-circle mr-2 text-purple-500"></i>
                 Supported formats: {fileExtensionMap[selectedLanguage].join(", ")}
               </p>
             </div>
