@@ -17,6 +17,9 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
 
   // We only support executable files
   const executableExtensions = [".exe", ".dll", ".bat"];
+  
+  // This replaces the old fileExtensionMap that was language-specific
+  // Now we only focus on executable file types
 
   // Format file size for display
   const formatFileSize = (bytes: number): string => {
