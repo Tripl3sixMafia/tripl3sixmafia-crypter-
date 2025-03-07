@@ -1,32 +1,6 @@
-import { pgTable, text, serial, integer, boolean, jsonb, timestamp, varchar, unique } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, jsonb } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
-
-// Define table for users
-export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  email: text("email").notNull().unique(),
-  phone: text("phone").notNull(),
-  passwordHash: text("password_hash").notNull(),
-  isVerified: boolean("is_verified").default(false),
-  verificationCode: text("verification_code"),
-  verificationExpiry: timestamp("verification_expiry"),
-  isPremium: boolean("is_premium").default(false),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
-
-// Define table for license keys
-export const licenseKeys = pgTable("license_keys", {
-  id: serial("id").primaryKey(),
-  userId: integer("user_id").references(() => users.id).notNull(),
-  transactionId: text("transaction_id").unique(),
-  licenseKey: text("license_key").notNull().unique(),
-  isActive: boolean("is_active").default(true),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  expiresAt: timestamp("expires_at"),
-});
 
 // Define table for obfuscation jobs
 export const obfuscationJobs = pgTable("obfuscation_jobs", {
@@ -119,33 +93,6 @@ export const obfuscationResultSchema = z.object({
   detectionProbability: z.number().min(0).max(100).default(30),
 });
 
-// User schemas
-export const registerUserSchema = z.object({
-  name: z.string().min(1, "Name is required"),
-  email: z.string().email("Valid email required"),
-  phone: z.string().min(10, "Phone number must be at least 10 digits"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  confirmPassword: z.string().min(8, "Confirm password must be at least 8 characters"),
-  isVerified: z.boolean().default(false).optional(),
-}).refine(data => data.password === data.confirmPassword, {
-  message: "Passwords do not match",
-  path: ["confirmPassword"],
-});
-
-export const verifyOtpSchema = z.object({
-  email: z.string().email(),
-  code: z.string().min(6).max(6)
-});
-
-export const loginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8)
-});
-
-export const licenseKeySchema = z.object({
-  transactionId: z.string().min(10)
-});
-
 // Types
 export type InsertObfuscationJob = z.infer<typeof insertObfuscationJobSchema>;
 export type ObfuscationJob = typeof obfuscationJobs.$inferSelect;
@@ -153,6 +100,3 @@ export type ObfuscationOptions = z.infer<typeof obfuscationOptionsSchema>;
 export type ObfuscationResult = z.infer<typeof obfuscationResultSchema>;
 export type AdditionalProtections = z.infer<typeof additionalProtectionsSchema>;
 export type OutputOptions = z.infer<typeof outputOptionsSchema>;
-export type User = typeof users.$inferSelect;
-export type InsertUser = z.infer<typeof registerUserSchema>;
-export type LicenseKey = typeof licenseKeys.$inferSelect;

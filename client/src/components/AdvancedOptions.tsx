@@ -1,5 +1,5 @@
 import React from "react";
-import type { ObfuscationOptions, OutputOptions, AdditionalProtections } from "@shared/schema";
+import type { ObfuscationOptions, OutputOptions, AdditionalProtections } from "../../shared/interfaces";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
