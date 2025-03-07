@@ -10,6 +10,7 @@ import { Checkbox } from "../components/ui/checkbox";
 import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import { Shield, FileCode, Zap, Lock, AlertTriangle } from "lucide-react";
 
 interface AdvancedOptionsProps {
   options: ObfuscationOptions;
@@ -60,34 +61,34 @@ export default function AdvancedOptions({
   };
 
   return (
-    <div className="mb-8 mt-8 bg-gray-800/40 backdrop-blur-sm rounded-xl p-8 border border-gray-700/50 shadow-lg">
+    <div className="mb-8 mt-8 bg-black/40 backdrop-blur-sm rounded-xl p-8 border border-red-900/30 shadow-glow">
       <h2 className="text-2xl font-bold text-white mb-5 flex items-center">
-        <i className="fas fa-shield-alt text-gradient bg-gradient-to-r from-purple-400 to-pink-500 mr-3"></i>
+        <Shield className="h-6 w-6 text-red-500 mr-3" />
         Advanced Protection Settings
       </h2>
 
       <Tabs defaultValue="code-protection" className="w-full">
-        <TabsList className="grid grid-cols-3 mb-6">
-          <TabsTrigger value="code-protection" className="rounded-lg">
-            <i className="fas fa-code mr-2"></i>
+        <TabsList className="grid grid-cols-3 mb-6 bg-black/50 border border-red-900/30">
+          <TabsTrigger value="code-protection" className="rounded-lg data-[state=active]:bg-red-900/40 data-[state=active]:text-white">
+            <FileCode className="h-4 w-4 mr-2" />
             Code Protection
           </TabsTrigger>
-          <TabsTrigger value="anti-analysis" className="rounded-lg">
-            <i className="fas fa-microscope mr-2"></i>
+          <TabsTrigger value="anti-analysis" className="rounded-lg data-[state=active]:bg-red-900/40 data-[state=active]:text-white">
+            <Shield className="h-4 w-4 mr-2" />
             Anti-Analysis
           </TabsTrigger>
-          <TabsTrigger value="output-options" className="rounded-lg">
-            <i className="fas fa-cogs mr-2"></i>
+          <TabsTrigger value="output-options" className="rounded-lg data-[state=active]:bg-red-900/40 data-[state=active]:text-white">
+            <Zap className="h-4 w-4 mr-2" />
             Output Options
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="code-protection" className="p-4 bg-gray-900/50 rounded-xl border border-gray-700/50">
+        <TabsContent value="code-protection" className="p-4 bg-black/50 rounded-xl border border-red-900/30">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="bg-gray-800/60 border-gray-700/50">
+            <Card className="bg-black/60 border-red-900/20">
               <CardHeader>
-                <CardTitle className="text-lg font-semibold">IL/.NET Protection</CardTitle>
-                <CardDescription>Enhanced protection for .NET assemblies</CardDescription>
+                <CardTitle className="text-lg font-semibold text-white">IL/.NET Protection</CardTitle>
+                <CardDescription className="text-gray-400">Enhanced protection for .NET assemblies</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -131,10 +132,10 @@ export default function AdvancedOptions({
               </CardContent>
             </Card>
 
-            <Card className="bg-gray-800/60 border-gray-700/50">
+            <Card className="bg-black/60 border-red-900/20">
               <CardHeader>
-                <CardTitle className="text-lg font-semibold">Native Protection</CardTitle>
-                <CardDescription>Low-level protection features</CardDescription>
+                <CardTitle className="text-lg font-semibold text-white">Native Protection</CardTitle>
+                <CardDescription className="text-gray-400">Low-level protection features</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -180,9 +181,9 @@ export default function AdvancedOptions({
           </div>
         </TabsContent>
 
-        <TabsContent value="anti-analysis" className="p-4 bg-gray-900/50 rounded-xl border border-gray-700/50">
+        <TabsContent value="anti-analysis" className="p-4 bg-black/50 rounded-xl border border-red-900/30">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card className="bg-gray-800/60 border-gray-700/50">
+            <Card className="bg-black/60 border-red-900/20">
               <CardHeader>
                 <CardTitle className="text-lg font-semibold">Anti-Debug Protections</CardTitle>
                 <CardDescription>Prevent debugging and analysis</CardDescription>
@@ -229,10 +230,10 @@ export default function AdvancedOptions({
               </CardContent>
             </Card>
 
-            <Card className="bg-gray-800/60 border-gray-700/50">
+            <Card className="bg-black/60 border-red-900/20">
               <CardHeader>
-                <CardTitle className="text-lg font-semibold">Runtime Protection</CardTitle>
-                <CardDescription>Protect application during execution</CardDescription>
+                <CardTitle className="text-lg font-semibold text-white">Runtime Protection</CardTitle>
+                <CardDescription className="text-gray-400">Protect application during execution</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -278,12 +279,12 @@ export default function AdvancedOptions({
           </div>
         </TabsContent>
 
-        <TabsContent value="output-options" className="p-4 bg-gray-900/50 rounded-xl border border-gray-700/50">
+        <TabsContent value="output-options" className="p-4 bg-black/50 rounded-xl border border-red-900/30">
           <div className="grid grid-cols-1 gap-6">
-            <Card className="bg-gray-800/60 border-gray-700/50">
+            <Card className="bg-black/60 border-red-900/20">
               <CardHeader>
-                <CardTitle className="text-lg font-semibold">Executable Options</CardTitle>
-                <CardDescription>Configure final output format</CardDescription>
+                <CardTitle className="text-lg font-semibold text-white">Executable Options</CardTitle>
+                <CardDescription className="text-gray-400">Configure final output format</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="flex items-center justify-between">
