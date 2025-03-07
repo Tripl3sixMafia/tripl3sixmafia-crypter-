@@ -7,9 +7,11 @@ services:
     region: oregon # or choose a region closer to your users
     plan: free # can be upgraded later
     healthCheckPath: /
+    healthCheckTimeout: 5
+    numInstances: 1
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: "10000" # Render assigns a PORT, but we set a fallback
     autoDeploy: true
+    domains:
+      - tripl3sixmafia-crypter.onrender.com # This will be auto-assigned by Render
