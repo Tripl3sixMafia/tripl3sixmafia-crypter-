@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import LanguageSelector from "@/components/LanguageSelector";
 import FileUploader from "@/components/FileUploader";
@@ -7,13 +7,20 @@ import ProcessingState from "@/components/ProcessingState";
 import ResultsView from "@/components/ResultsView";
 import InfoSection from "@/components/InfoSection";
 import Footer from "@/components/Footer";
+import AdvancedOptions from "@/components/AdvancedOptions";
+import IconSelector from "@/components/IconSelector";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { 
+  SupportedLanguage, 
+  ObfuscationOptions as SchemaOptions, 
+  AdditionalProtections,
+  OutputOptions 
+} from "@/shared/schema";
 
-export type SupportedLanguage = 'javascript' | 'python' | 'java' | 'php' | 'csharp';
-export type ObfuscationLevel = 'light' | 'medium' | 'heavy' | 'custom';
+export type ObfuscationLevel = 'light' | 'medium' | 'heavy' | 'custom' | 'maximum';
 
 export interface ObfuscationOptions {
   level: ObfuscationLevel;
@@ -23,6 +30,16 @@ export interface ObfuscationOptions {
   stringSplitting: boolean;
   controlFlowFlattening: boolean;
   deadCodeInjection: boolean;
+  nativeProtection: boolean;
+  resourceEncryption: boolean;
+  metadataRemoval: boolean;
+  ilToNativeCompilation: boolean;
+  antiDecompilation: boolean;
+  antitampering: boolean;
+  constantsEncryption: boolean;
+  autoDetectLanguage: boolean;
+  makeExecutable: boolean;
+  additional?: AdditionalProtections;
 }
 
 export interface ObfuscationResult {
@@ -32,6 +49,11 @@ export interface ObfuscationResult {
   compressionRatio: number;
   protectionLevel: string;
   appliedTechniques: string[];
+  outputType?: string;
+  isExecutable: boolean;
+  downloadUrl?: string;
+  protectionScore: number;
+  detectionProbability: number;
 }
 
 const defaultOptions: ObfuscationOptions = {
@@ -41,16 +63,105 @@ const defaultOptions: ObfuscationOptions = {
   stringEncryption: true,
   stringSplitting: false,
   controlFlowFlattening: true,
-  deadCodeInjection: false
+  deadCodeInjection: false,
+  nativeProtection: false,
+  resourceEncryption: false,
+  metadataRemoval: false,
+  ilToNativeCompilation: false,
+  antiDecompilation: false,
+  antitampering: false,
+  constantsEncryption: false,
+  autoDetectLanguage: true,
+  makeExecutable: false,
+  additional: {
+    antiDebugging: false,
+    antiDumping: false,
+    antiVirtualMachine: false,
+    selfDefending: false,
+    watermarking: false,
+    licenseSystem: false,
+    dllInjection: false,
+    domainLock: [],
+    customIcon: false
+  }
+};
+
+const defaultOutputOptions: OutputOptions = {
+  makeExecutable: false,
+  targetPlatform: "windows",
+  obfuscationStrength: "normal",
+  includeRuntime: true,
+  compressionLevel: 7,
+  hiddenConsole: false
 };
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<string>("upload");
   const [selectedLanguage, setSelectedLanguage] = useState<SupportedLanguage>("javascript");
   const [options, setOptions] = useState<ObfuscationOptions>(defaultOptions);
+  const [outputOptions, setOutputOptions] = useState<OutputOptions>(defaultOutputOptions);
   const [file, setFile] = useState<File | null>(null);
+  const [customIcon, setCustomIcon] = useState<File | null>(null);
   const [result, setResult] = useState<ObfuscationResult | null>(null);
+  const [detectedLanguage, setDetectedLanguage] = useState<SupportedLanguage | null>(null);
+  const [isExecutableFile, setIsExecutableFile] = useState<boolean>(false);
   const { toast } = useToast();
+
+  // Function to detect file type and language automatically
+  useEffect(() => {
+    if (file && options.autoDetectLanguage) {
+      const extension = file.name.split('.').pop()?.toLowerCase();
+      
+      // Map file extensions to languages
+      const extensionToLanguage: Record<string, SupportedLanguage> = {
+        'js': 'javascript',
+        'ts': 'javascript',
+        'jsx': 'javascript',
+        'tsx': 'javascript',
+        'py': 'python',
+        'java': 'java',
+        'php': 'php',
+        'cs': 'csharp',
+        'vb': 'vbnet',
+        'fs': 'fsharp',
+        'ps1': 'powershell',
+        'bat': 'batch',
+        'exe': 'csharp',
+        'dll': 'csharp',
+        'asm': 'assembly'
+      };
+
+      // Detect if file is executable
+      const executableExtensions = ['exe', 'dll', 'bat'];
+      setIsExecutableFile(extension ? executableExtensions.includes(extension) : false);
+      
+      if (extension && extension in extensionToLanguage) {
+        const detected = extensionToLanguage[extension];
+        setDetectedLanguage(detected);
+        setSelectedLanguage(detected);
+        
+        // For executables, automatically enable additional protections
+        if (executableExtensions.includes(extension)) {
+          setOptions(prev => ({
+            ...prev,
+            nativeProtection: true,
+            antiDecompilation: true,
+            makeExecutable: true,
+            additional: {
+              ...prev.additional,
+              antiDebugging: true,
+              antiDumping: true
+            }
+          }));
+          
+          setOutputOptions(prev => ({
+            ...prev,
+            makeExecutable: true
+          }));
+        }
+      }
+    }
+  }, [file, options.autoDetectLanguage]);
 
   const obfuscationMutation = useMutation({
     mutationFn: async (formData: FormData) => {
@@ -62,7 +173,7 @@ export default function Home() {
       setActiveTab("results");
       toast({
         title: "Obfuscation complete",
-        description: "Your code has been successfully obfuscated.",
+        description: "Your code has been successfully protected with advanced security measures.",
       });
     },
     onError: (error) => {
@@ -80,6 +191,21 @@ export default function Home() {
     setResult(null);
   };
 
+  const handleIconChange = (iconFile: File | null) => {
+    setCustomIcon(iconFile);
+    
+    // Update options to reflect custom icon selection
+    if (iconFile) {
+      setOptions(prev => ({
+        ...prev,
+        additional: {
+          ...prev.additional,
+          customIcon: true
+        }
+      }));
+    }
+  };
+
   const handleObfuscate = () => {
     if (!file) {
       toast({
@@ -92,8 +218,13 @@ export default function Home() {
 
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("language", selectedLanguage);
+    formData.append("language", detectedLanguage || selectedLanguage);
     formData.append("options", JSON.stringify(options));
+    formData.append("outputOptions", JSON.stringify(outputOptions));
+    
+    if (customIcon && options.additional?.customIcon) {
+      formData.append("icon", customIcon);
+    }
 
     obfuscationMutation.mutate(formData);
   };
