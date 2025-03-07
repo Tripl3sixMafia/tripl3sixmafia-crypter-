@@ -1,6 +1,6 @@
 # TRIPL3SIXMAFIA CRYPTER
 
-![TRIPL3SIXMAFIA CRYPTER](https://raw.githubusercontent.com/username/tripl3sixmafia-crypter/main/client/public/logo.png)
+![TRIPL3SIXMAFIA CRYPTER](client/public/logo.png)
 
 The street's most feared protection system. Your code stays locked down with this sophisticated web application designed to protect source code intellectual property through advanced obfuscation techniques.
 
