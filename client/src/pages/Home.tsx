@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import Navbar from "../components/Navbar";
-import LanguageSelector from "../components/LanguageSelector";
 import FileUploader from "../components/FileUploader";
 import ObfuscationOptions from "../components/ObfuscationOptions";
 import ProcessingState from "../components/ProcessingState";
@@ -19,6 +18,9 @@ import {
   AdditionalProtections,
   OutputOptions 
 } from "../../shared/interfaces";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Shield, Lock, FileCode, Zap, AlertTriangle } from "lucide-react";
 
 export type ObfuscationLevel = 'light' | 'medium' | 'heavy' | 'custom' | 'maximum';
 
@@ -57,27 +59,27 @@ export interface ObfuscationResult {
 }
 
 const defaultOptions: ObfuscationOptions = {
-  level: 'medium',
+  level: 'heavy',
   nameMangling: true,
   propertyMangling: true,
   stringEncryption: true,
-  stringSplitting: false,
+  stringSplitting: true,
   controlFlowFlattening: true,
-  deadCodeInjection: false,
-  nativeProtection: false,
-  resourceEncryption: false,
-  metadataRemoval: false,
-  ilToNativeCompilation: false,
-  antiDecompilation: false,
-  antitampering: false,
-  constantsEncryption: false,
+  deadCodeInjection: true,
+  nativeProtection: true,
+  resourceEncryption: true,
+  metadataRemoval: true,
+  ilToNativeCompilation: true,
+  antiDecompilation: true,
+  antitampering: true,
+  constantsEncryption: true,
   autoDetectLanguage: true,
-  makeExecutable: false,
+  makeExecutable: true,
   additional: {
-    antiDebugging: false,
-    antiDumping: false,
-    antiVirtualMachine: false,
-    selfDefending: false,
+    antiDebugging: true,
+    antiDumping: true,
+    antiVirtualMachine: true,
+    selfDefending: true,
     watermarking: false,
     licenseSystem: false,
     dllInjection: false,
@@ -87,11 +89,11 @@ const defaultOptions: ObfuscationOptions = {
 };
 
 const defaultOutputOptions: OutputOptions = {
-  makeExecutable: false,
+  makeExecutable: true,
   targetPlatform: "windows",
-  obfuscationStrength: "normal",
+  obfuscationStrength: "maximum",
   includeRuntime: true,
-  compressionLevel: 7,
+  compressionLevel: 9,
   hiddenConsole: false
 };
 
@@ -235,42 +237,63 @@ export default function Home() {
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           {/* Hero section */}
-          <div className="px-4 py-6 sm:px-0 mb-8">
+          <div className="px-4 py-8 sm:px-0 mb-8">
             <div className="text-center">
-              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-transparent bg-clip-text mb-4">
-                Code Obfuscation Made Simple
-              </h1>
-              <p className="text-lg text-gray-300 max-w-3xl mx-auto">
-                Protect your source code from theft and reverse engineering with our powerful obfuscation tool.
+              <div className="flex justify-center items-center mb-4">
+                <Shield className="h-12 w-12 text-red-600 mr-3" />
+                <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-red-700 via-red-500 to-red-400 text-transparent bg-clip-text">
+                  DLINQNT SHIELD
+                </h1>
+              </div>
+              <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-6">
+                Advanced Executable Protection System
+              </p>
+              <div className="flex flex-wrap justify-center gap-3 mb-6">
+                <Badge variant="outline" className="bg-black/40 text-red-400 border-red-900/50 px-3 py-1">
+                  <Lock className="h-3.5 w-3.5 mr-1" /> Automatic Protection
+                </Badge>
+                <Badge variant="outline" className="bg-black/40 text-red-400 border-red-900/50 px-3 py-1">
+                  <FileCode className="h-3.5 w-3.5 mr-1" /> Executable Files
+                </Badge>
+                <Badge variant="outline" className="bg-black/40 text-red-400 border-red-900/50 px-3 py-1">
+                  <Zap className="h-3.5 w-3.5 mr-1" /> Undetectable
+                </Badge>
+                <Badge variant="outline" className="bg-black/40 text-red-400 border-red-900/50 px-3 py-1">
+                  <AlertTriangle className="h-3.5 w-3.5 mr-1" /> Anti-Analysis
+                </Badge>
+              </div>
+              <p className="text-sm text-gray-400 max-w-2xl mx-auto">
+                Shield your executable files from prying eyes with our sophisticated protection system.
+                Simply upload your file and our system will automatically implement optimal security measures.
               </p>
             </div>
           </div>
           
           {/* Tab Navigation */}
-          <div className="mb-8 border-b border-gray-800">
+          <div className="mb-8 border-b border-red-900/30">
             <div className="max-w-5xl mx-auto flex space-x-8 overflow-x-auto">
               <button 
-                className={`py-4 px-1 border-b-2 ${activeTab === "upload" ? "border-purple-500 text-white" : "border-transparent text-gray-400 hover:text-gray-300"} font-medium text-sm focus:outline-none whitespace-nowrap`}
+                className={`py-4 px-1 border-b-2 ${activeTab === "upload" ? "border-red-600 text-white" : "border-transparent text-gray-400 hover:text-gray-300"} font-medium text-sm focus:outline-none whitespace-nowrap`}
                 onClick={() => setActiveTab("upload")}
               >
-                <i className="fas fa-upload mr-2"></i>Upload Code
+                <i className="fas fa-upload mr-2"></i>Upload Executable
               </button>
               {result && (
                 <button 
-                  className={`py-4 px-1 border-b-2 ${activeTab === "results" ? "border-purple-500 text-white" : "border-transparent text-gray-400 hover:text-gray-300"} font-medium text-sm focus:outline-none whitespace-nowrap`}
+                  className={`py-4 px-1 border-b-2 ${activeTab === "results" ? "border-red-600 text-white" : "border-transparent text-gray-400 hover:text-gray-300"} font-medium text-sm focus:outline-none whitespace-nowrap`}
                   onClick={() => setActiveTab("results")}
                 >
-                  <i className="fas fa-code mr-2"></i>Obfuscated Result
+                  <i className="fas fa-shield-alt mr-2"></i>Protection Results
                 </button>
               )}
               <button 
-                className={`py-4 px-1 border-b-2 ${activeTab === "recent" ? "border-purple-500 text-white" : "border-transparent text-gray-400 hover:text-gray-300"} font-medium text-sm focus:outline-none whitespace-nowrap`}
+                className={`py-4 px-1 border-b-2 ${activeTab === "recent" ? "border-red-600 text-white" : "border-transparent text-gray-400 hover:text-gray-300"} font-medium text-sm focus:outline-none whitespace-nowrap`}
                 onClick={() => setActiveTab("recent")}
               >
                 <i className="fas fa-history mr-2"></i>Recent Jobs
               </button>
               <button 
-                className={`py-4 px-1 border-b-2 ${activeTab === "learn" ? "border-purple-500 text-white" : "border-transparent text-gray-400 hover:text-gray-300"} font-medium text-sm focus:outline-none whitespace-nowrap`}
+                className={`py-4 px-1 border-b-2 ${activeTab === "learn" ? "border-red-600 text-white" : "border-transparent text-gray-400 hover:text-gray-300"} font-medium text-sm focus:outline-none whitespace-nowrap`}
                 onClick={() => setActiveTab("learn")}
               >
                 <i className="fas fa-book mr-2"></i>Learn More
@@ -282,15 +305,39 @@ export default function Home() {
           <div className="max-w-5xl mx-auto">
             {activeTab === "upload" && (
               <>
-                <LanguageSelector 
-                  selectedLanguage={selectedLanguage} 
-                  onSelectLanguage={setSelectedLanguage} 
-                />
-                
-                <FileUploader 
-                  selectedLanguage={selectedLanguage}
-                  onFileChange={handleFileChange}
-                />
+                <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-red-900/30 p-6 mb-8 shadow-glow">
+                  <div className="flex items-center mb-4">
+                    <Shield className="h-5 w-5 text-red-500 mr-2" />
+                    <h2 className="text-xl font-semibold text-white">Upload Your Executable File</h2>
+                  </div>
+                  <p className="text-gray-400 text-sm mb-6">
+                    Our system will automatically detect and implement the best protection measures for your executable file.
+                    Supported file types: .exe, .dll, .bat
+                  </p>
+                  
+                  <FileUploader 
+                    selectedLanguage={selectedLanguage}
+                    onFileChange={handleFileChange}
+                  />
+                  
+                  {file && (
+                    <div className="mt-4 px-4 py-3 bg-red-900/20 border border-red-900/30 rounded-lg flex items-center">
+                      <div className="exe-icon h-10 w-10 flex-shrink-0">
+                        <FileCode className="h-6 w-6" />
+                      </div>
+                      <div className="ml-3 flex-1">
+                        <p className="text-white font-medium">{file.name}</p>
+                        <p className="text-xs text-gray-400">{Math.round(file.size / 1024)} KB</p>
+                      </div>
+                      <div className="flex-shrink-0">
+                        <span className="pro-badge flex items-center">
+                          <Zap className="h-3 w-3 mr-1" />
+                          AUTO-PROTECT
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                </div>
                 
                 <ObfuscationOptions 
                   options={options} 
