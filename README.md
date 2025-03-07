@@ -17,9 +17,31 @@ The street's most feared protection system. Your code stays locked down with thi
 - ⏰ Time-based expiration for protected code
 - 🎯 Customizable protection levels
 
-## Deployment Instructions for Render
+## Deployment Options
 
-### Option 1: Using the Render Dashboard
+### Option 1: Deploy to LemeHost.com (Recommended)
+
+We provide specialized deployment scripts for LemeHost.com:
+
+1. Run our automated build script:
+   ```bash
+   chmod +x build.sh && ./build.sh
+   ```
+2. Upload the contents of the `deploy/` directory to your LemeHost server
+3. Run the deployment script on your server:
+   ```bash
+   chmod +x lemehost-deploy.sh && ./lemehost-deploy.sh
+   ```
+4. Start the application using PM2:
+   ```bash
+   pm2 start lemehost.config.js
+   ```
+
+👉 **For complete LemeHost deployment instructions, see [LEMEHOST_DEPLOYMENT.md](LEMEHOST_DEPLOYMENT.md)**
+
+### Option 2: Deploy to Render
+
+#### Using the Render Dashboard
 
 1. Log in to your Render account
 2. Click on "New" and select "Web Service"
@@ -33,7 +55,7 @@ The street's most feared protection system. Your code stays locked down with thi
    - `NODE_ENV`: `production`
 6. Click "Create Web Service"
 
-### Option 2: Using render.yaml (Recommended)
+#### Using render.yaml (Alternative)
 
 1. Make sure your repo contains the `render.yaml` file
 2. Log in to your Render account

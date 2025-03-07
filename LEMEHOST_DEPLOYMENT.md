@@ -1,4 +1,4 @@
-# Deploying TRIPL3SIXMAFIA CRYPTER to LemeHost.com
+# 🔒 Deploying TRIPL3SIXMAFIA CRYPTER to LemeHost.com 🔒
 
 This guide provides step-by-step instructions for deploying the TRIPL3SIXMAFIA CRYPTER application on LemeHost.com using their Node.js hosting service.
 
@@ -9,30 +9,85 @@ This guide provides step-by-step instructions for deploying the TRIPL3SIXMAFIA C
 - FTP access to your hosting account or Git integration
 - Node.js 18+ and npm 9+ installed on the LemeHost server (check with support if needed)
 
-## Deployment Steps
+## Automated Deployment (Recommended)
 
-### 1. Preparing Your Application
+We've created specialized deployment scripts to make the process as smooth as possible:
 
-Before uploading your application to LemeHost, make sure it's properly built for production:
+### 1. Run the Build Script Locally
 
 ```bash
-# Install dependencies
-npm install
+# Make the build script executable
+chmod +x build.sh
 
-# Build the application
+# Run the build script
+./build.sh
+```
+
+This will:
+- Install all dependencies
+- Build the application for production
+- Create a `deploy` directory with all necessary files
+
+### 2. Upload the Deployment Package
+
+1. Connect to your LemeHost server using an FTP client
+2. Upload the entire `deploy/` directory to your LemeHost server
+3. Upload the `.env` file (create this from `.env.template` with your actual values)
+
+### 3. Run the Deployment Script on LemeHost
+
+Connect to your server via SSH or use the LemeHost terminal:
+
+```bash
+cd /path/to/your/application
+chmod +x lemehost-deploy.sh
+./lemehost-deploy.sh
+```
+
+This will:
+- Check and display Node.js and npm versions
+- Install production dependencies
+- Set up proper file permissions
+- Configure environment variables
+- Create log directories
+
+### 4. Start Your Application
+
+#### Option A: Direct Start
+
+```bash
+node dist/index.js
+```
+
+#### Option B: Using PM2 (if available)
+
+```bash
+pm2 start lemehost.config.js
+```
+
+## Manual Deployment Steps
+
+If you prefer manual deployment, follow these detailed steps:
+
+### 1. Prepare Your Application
+
+Build your application locally:
+
+```bash
+npm install
 npm run build
 ```
 
-### 2. Uploading Files to LemeHost
+### 2. Upload Files to LemeHost
 
 #### Option A: Using FTP
 
 1. Connect to your LemeHost server using an FTP client
-2. Upload the following files and directories to your server:
-   - `dist/` (contains your compiled server code)
-   - `dist/client/` (contains your compiled React frontend)
+2. Upload the following files and directories:
+   - `dist/` (contains your compiled server code and frontend)
    - `package.json` and `package-lock.json`
-   - `build.sh` (for automated builds)
+   - `lemehost.config.js`
+   - `.env` file (created from `.env.template`)
 
 #### Option B: Using Git (if available)
 
@@ -45,7 +100,7 @@ npm run build
    git push lemehost main
    ```
 
-### 3. Setting Up Environment Variables
+### 3. Configure Environment Variables
 
 In your LemeHost control panel:
 
@@ -54,7 +109,7 @@ In your LemeHost control panel:
    - `NODE_ENV=production`
    - `PORT=8080` (or the port provided by LemeHost)
 
-### 4. Installing Dependencies on the Server
+### 4. Install Dependencies on the Server
 
 Connect to your server via SSH or use the LemeHost terminal:
 
@@ -63,48 +118,55 @@ cd /path/to/your/application
 npm install --production
 ```
 
-### 5. Starting Your Application
+### 5. Start Your Application
 
-Configure the application to start with:
+See the "Start Your Application" section under Automated Deployment.
 
-```bash
-node dist/index.js
-```
+## Configuration Files
 
-In your LemeHost control panel, set this as your start command or configure the appropriate Node.js service.
+### lemehost.config.js
 
-### 6. Configuring a Process Manager (PM2 if available)
-
-If LemeHost allows PM2, use this configuration:
-
-```bash
-pm2 start dist/index.js --name tripl3sixmafia-crypter
-```
-
-### 7. Domain and SSL Configuration
-
-1. In the LemeHost control panel, set up your domain to point to your Node.js application
-2. Enable SSL/HTTPS through the LemeHost control panel
+This file provides configured settings for:
+- Application details (name, version, main file)
+- Server configuration (port, memory limits)
+- Process management via PM2
+- Build configuration
+- Static file serving
+- Security settings (rate limiting, Helmet)
+- Logging configuration
 
 ## Troubleshooting
 
 If you encounter issues:
 
-1. Check the server logs for errors
-2. Verify that all dependencies are installed correctly
-3. Ensure the correct Node.js version is being used
-4. Check if the port configuration matches LemeHost requirements
-5. Verify that build artifacts are correctly placed
+1. Check the server logs in the `logs/` directory
+2. Verify Node.js version with `node -v` (should be 18+)
+3. Ensure all dependencies installed with `npm list --depth=0`
+4. Verify the port isn't already in use with `lsof -i:8080`
+5. Check if build artifacts exist with `ls -la dist/`
 
 ## Need Help?
 
-For any issues related to LemeHost deployment:
-- Contact LemeHost support
-- Refer to LemeHost's Node.js deployment documentation
-- Email the developer at tripl3sixmafia@gmail.com
+For any deployment issues:
+- Contact LemeHost.com support directly
+- Refer to their Node.js documentation
+- Email the development team at tripl3sixmafia@gmail.com
 
-## Security Notes
+## Security Best Practices
 
-- Never expose sensitive files to public access
-- Store API keys securely following LemeHost best practices
-- Configure appropriate CORS settings for production
+- Create a proper `.env` file from the template with secure values
+- Store API keys as environment variables, never in code
+- Configure CORS settings for production in `server/routes.ts`
+- Keep the `node_modules` directory updated with `npm audit fix`
+- Don't expose internal server paths in error messages
+
+## Monitoring & Maintenance
+
+- Check the application logs regularly
+- Set up uptime monitoring if possible
+- Consider implementing automatic backups
+- Keep dependencies updated with `npm outdated` checks
+
+---
+
+🔥 **TRIPL3SIXMAFIA CRYPTER** | For issues: tripl3sixmafia@gmail.com
