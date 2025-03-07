@@ -308,14 +308,14 @@ export default function AdvancedOptions({
                         value={outputOptions.targetPlatform} 
                         onValueChange={(value) => handleOutputOptionChange('targetPlatform', value)}
                       >
-                        <SelectTrigger className="w-full bg-gray-800/80 border-gray-700/80 text-white">
+                        <SelectTrigger className="w-full bg-black/80 border-red-900/30 text-white">
                           <SelectValue placeholder="Select platform" />
                         </SelectTrigger>
-                        <SelectContent className="bg-gray-800 border-gray-700/80">
-                          <SelectItem value="windows" className="text-white hover:bg-gray-700/80">Windows</SelectItem>
-                          <SelectItem value="linux" className="text-white hover:bg-gray-700/80">Linux</SelectItem>
-                          <SelectItem value="macos" className="text-white hover:bg-gray-700/80">macOS</SelectItem>
-                          <SelectItem value="cross-platform" className="text-white hover:bg-gray-700/80">Cross-Platform</SelectItem>
+                        <SelectContent className="bg-black border-red-900/30">
+                          <SelectItem value="windows" className="text-white hover:bg-red-950/50">Windows</SelectItem>
+                          <SelectItem value="linux" className="text-white hover:bg-red-950/50">Linux</SelectItem>
+                          <SelectItem value="macos" className="text-white hover:bg-red-950/50">macOS</SelectItem>
+                          <SelectItem value="cross-platform" className="text-white hover:bg-red-950/50">Cross-Platform</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -383,10 +383,10 @@ export default function AdvancedOptions({
               </CardContent>
             </Card>
 
-            <Card className="bg-gray-800/60 border-gray-700/50">
+            <Card className="bg-black/60 border-red-900/20">
               <CardHeader>
-                <CardTitle className="text-lg font-semibold">Enterprise Features</CardTitle>
-                <CardDescription>Advanced licensing and watermarking</CardDescription>
+                <CardTitle className="text-lg font-semibold text-white">Enterprise Features</CardTitle>
+                <CardDescription className="text-gray-400">Advanced licensing and watermarking</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
@@ -416,7 +416,7 @@ export default function AdvancedOptions({
                 </div>
 
                 {options.additional?.licenseSystem && (
-                  <div className="bg-gray-900/50 p-4 rounded-lg mt-2">
+                  <div className="bg-black/50 p-4 rounded-lg mt-2 border border-red-900/30">
                     <Label className="text-white mb-2 block">Expiration Date (optional)</Label>
                     <Input 
                       type="date" 
@@ -431,7 +431,7 @@ export default function AdvancedOptions({
                           }
                         });
                       }} 
-                      className="bg-gray-900 border-gray-700 text-white"
+                      className="bg-black/80 border-red-900/30 text-white"
                     />
                     
                     <Label className="text-white mb-2 mt-4 block">Domain Restrictions (optional)</Label>
@@ -439,7 +439,7 @@ export default function AdvancedOptions({
                       <Input 
                         type="text" 
                         placeholder="Add domain (e.g., example.com)" 
-                        className="bg-gray-900 border-gray-700 text-white"
+                        className="bg-black/80 border-red-900/30 text-white"
                         id="domainInput"
                       />
                       <Button 
@@ -466,10 +466,10 @@ export default function AdvancedOptions({
                     {options.additional.domainLock && options.additional.domainLock.length > 0 && (
                       <div className="mt-2 flex flex-wrap gap-2">
                         {options.additional.domainLock.map((domain, index) => (
-                          <div key={index} className="bg-gray-800 px-2 py-1 rounded-md flex items-center text-sm">
+                          <div key={index} className="bg-black px-2 py-1 rounded-md flex items-center text-sm border border-red-900/30 text-white">
                             {domain}
                             <button 
-                              className="ml-2 text-gray-400 hover:text-red-400"
+                              className="ml-2 text-gray-400 hover:text-red-500"
                               onClick={() => {
                                 if (!options.additional) return;
                                 onChangeOptions({
@@ -503,7 +503,7 @@ export default function AdvancedOptions({
                           }
                         });
                       }} 
-                      className="bg-gray-900 border-gray-700 text-white"
+                      className="bg-black/80 border-red-900/30 text-white"
                     />
                   </div>
                 )}
@@ -513,10 +513,10 @@ export default function AdvancedOptions({
         </TabsContent>
       </Tabs>
 
-      <div className="mt-5 p-4 bg-purple-900/20 rounded-lg border border-purple-800/30 shadow">
+      <div className="mt-5 p-4 bg-black/40 rounded-lg border border-red-900/30 shadow-lg shadow-red-900/10">
         <div className="flex items-start">
           <div className="flex-shrink-0 mt-1">
-            <i className="fas fa-info-circle text-purple-400 text-lg"></i>
+            <i className="fas fa-shield-alt text-red-500 text-lg"></i>
           </div>
           <div className="ml-3">
             <h4 className="text-white font-medium">Advanced Protection Features</h4>
