@@ -174,7 +174,8 @@ export class MemStorage implements IStorage {
     
     if (!license) return false;
     
-    return license.isActive && license.expiresAt > new Date();
+    // Check if the license is active and not expired
+    return license.isActive && (license.expiresAt ? license.expiresAt > new Date() : true);
   }
   
   async deactivateLicenseKey(licenseKey: string): Promise<boolean> {

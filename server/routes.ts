@@ -3,10 +3,17 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import multer from "multer";
 import { obfuscateCode } from "./obfuscator";
-import { obfuscationOptionsSchema } from "@shared/schema";
+import { 
+  obfuscationOptionsSchema, 
+  registerUserSchema, 
+  verifyOtpSchema, 
+  loginSchema, 
+  licenseKeySchema 
+} from "@shared/schema";
 import { z } from "zod";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
+import * as crypto from 'crypto';
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Configure multer for memory storage

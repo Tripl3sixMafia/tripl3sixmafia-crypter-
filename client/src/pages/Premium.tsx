@@ -5,8 +5,10 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from 'wouter';
-import { ArrowRight, Copy, Shield, ShieldCheck, Clock, CheckCircle2, AlertTriangle } from "lucide-react";
+import { ArrowRight, Copy, Shield, ShieldCheck, Clock, CheckCircle2, AlertTriangle, CreditCard } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SiPaypal } from 'react-icons/si';
 
 export default function Premium() {
   const { toast } = useToast();
@@ -16,8 +18,11 @@ export default function Premium() {
   const [timeRemaining, setTimeRemaining] = useState(3600); // 1 hour in seconds
   const [isCopied, setIsCopied] = useState(false);
   const [status, setStatus] = useState('pending'); // pending, verifying, success, failed
+  const [paymentMethod, setPaymentMethod] = useState('crypto'); // crypto or paypal
+  const [userEmail, setUserEmail] = useState('');
   
   const walletAddress = 'MCSFKLxYj4HRTuvjrs8xv2zrWZks7xqoZz';
+  const paypalEmailAddress = 'tripl3sixmafia@gmail.com';
   const premiumAmount = 25;
 
   // Format the remaining time as mm:ss
