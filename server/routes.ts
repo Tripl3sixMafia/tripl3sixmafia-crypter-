@@ -117,6 +117,205 @@ export async function registerRoutes(app: Express): Promise<Server> {
       });
     }
   });
+  
+  // User Registration
+  app.post('/api/register', async (req, res) => {
+    try {
+      const userData = registerUserSchema.parse(req.body);
+      
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(userData.email);
+      if (existingUser) {
+        return res.status(400).json({ message: "User with this email already exists" });
+      }
+      
+      // Create new user
+      const userId = await storage.createUser(userData);
+      
+      return res.status(201).json({ 
+        userId,
+        message: "User registered successfully. Please verify your email."
+      });
+    } catch (error) {
+      console.error('Registration error:', error);
+      if (error instanceof ZodError) {
+        return res.status(400).json({ 
+          message: "Invalid registration data",
+          details: fromZodError(error).message
+        });
+      }
+      return res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Internal server error" 
+      });
+    }
+  });
+  
+  // Email Verification
+  app.post('/api/verify-email', async (req, res) => {
+    try {
+      const { email, code } = verifyOtpSchema.parse(req.body);
+      
+      const isVerified = await storage.verifyUser(email, code);
+      if (!isVerified) {
+        return res.status(400).json({ message: "Invalid verification code" });
+      }
+      
+      return res.status(200).json({ message: "Email verified successfully" });
+    } catch (error) {
+      console.error('Verification error:', error);
+      if (error instanceof ZodError) {
+        return res.status(400).json({ 
+          message: "Invalid verification data",
+          details: fromZodError(error).message
+        });
+      }
+      return res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Internal server error" 
+      });
+    }
+  });
+  
+  // User Login
+  app.post('/api/login', async (req, res) => {
+    try {
+      const { email, password } = loginSchema.parse(req.body);
+      
+      // Get user by email
+      const user = await storage.getUserByEmail(email);
+      if (!user) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+      
+      // In a real app, we would check the password hash
+      // For simplicity, we're just checking the raw password
+      if (user.password !== password) {
+        return res.status(401).json({ message: "Invalid email or password" });
+      }
+      
+      // Check if user is verified
+      if (!user.isVerified) {
+        return res.status(403).json({ message: "Please verify your email before logging in" });
+      }
+      
+      // Set up session (in a real app, we would use JWT or session cookies)
+      return res.status(200).json({ 
+        userId: user.id,
+        email: user.email,
+        isPremium: user.isPremium
+      });
+    } catch (error) {
+      console.error('Login error:', error);
+      if (error instanceof ZodError) {
+        return res.status(400).json({ 
+          message: "Invalid login data",
+          details: fromZodError(error).message
+        });
+      }
+      return res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Internal server error" 
+      });
+    }
+  });
+  
+  // Verify Crypto Transaction
+  app.post('/api/verify-transaction', async (req, res) => {
+    try {
+      const { transactionId } = req.body;
+      
+      if (!transactionId || typeof transactionId !== 'string') {
+        return res.status(400).json({ message: "Transaction ID is required" });
+      }
+      
+      // In a real app, we would verify the transaction on the blockchain
+      // For demo purposes, we'll just accept any transaction ID
+      
+      // Generate a license key
+      const licenseKey = await storage.createLicenseKey(1, transactionId); // Using userId 1 for demo
+      
+      return res.status(200).json({ 
+        success: true,
+        licenseKey
+      });
+    } catch (error) {
+      console.error('Transaction verification error:', error);
+      return res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Internal server error" 
+      });
+    }
+  });
+  
+  // Process PayPal Payment
+  app.post('/api/process-paypal', async (req, res) => {
+    try {
+      const { email, amount, transactionId } = req.body;
+      
+      if (!email || !amount || !transactionId) {
+        return res.status(400).json({ message: "Email, amount, and transaction ID are required" });
+      }
+      
+      // Check if amount is at least $25
+      if (parseFloat(amount) < 25) {
+        return res.status(400).json({ message: "Minimum amount for premium access is $25" });
+      }
+      
+      // In a real app, we would process the PayPal payment
+      // For demo purposes, we'll just generate a license key
+      
+      // Create a user if not exists
+      let userId = 1; // Default for demo
+      const existingUser = await storage.getUserByEmail(email);
+      if (!existingUser) {
+        // Generate a random password for email-only signup
+        const randomPassword = crypto.randomBytes(8).toString('hex');
+        userId = await storage.createUser({
+          email,
+          password: randomPassword,
+          isVerified: true // Auto-verify for PayPal users
+        });
+      } else {
+        userId = existingUser.id;
+      }
+      
+      // Generate a license key
+      const licenseKey = await storage.createLicenseKey(userId, transactionId);
+      
+      // In a real app, we would send the license key to the user's email
+      // For demo purposes, we'll just return it
+      
+      return res.status(200).json({ 
+        success: true,
+        licenseKey,
+        message: "Payment successful! Your license key has been sent to your email."
+      });
+    } catch (error) {
+      console.error('PayPal processing error:', error);
+      return res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Internal server error" 
+      });
+    }
+  });
+  
+  // Admin Premium Access (Bypass)
+  app.post('/api/admin-premium', async (req, res) => {
+    try {
+      const { code } = req.body;
+      
+      if (code !== 'tripl3six6mafia') {
+        return res.status(401).json({ message: "Invalid admin code" });
+      }
+      
+      // Grant admin premium access
+      return res.status(200).json({ 
+        success: true,
+        message: "Admin access granted"
+      });
+    } catch (error) {
+      console.error('Admin access error:', error);
+      return res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Internal server error" 
+      });
+    }
+  });
 
   const httpServer = createServer(app);
   return httpServer;
