@@ -439,14 +439,15 @@ export default function Home() {
           <div className="max-w-5xl mx-auto">
             {activeTab === "upload" && (
               <>
-                <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-red-900/30 p-6 mb-8 shadow-glow">
+                <div id="upload-section" className="bg-black/40 backdrop-blur-sm rounded-xl border border-red-900/30 p-6 mb-8 shadow-glow">
                   <div className="flex items-center mb-4">
                     <Shield className="h-5 w-5 text-red-500 mr-2" />
-                    <h2 className="text-xl font-semibold text-white">Upload Your Executable File</h2>
+                    <h2 className="text-xl font-semibold text-white gangster-font">DROP YA FILES HERE</h2>
                   </div>
-                  <p className="text-gray-400 text-sm mb-6">
-                    Our system will automatically analyze your executable and apply optimal protection measures.
-                    Just drag and drop your file and we'll handle everything else.
+                  <p className="text-gray-300 text-sm mb-6 border-l-2 border-red-800/50 pl-3">
+                    We keep your code locked down tight. No more reverse engineering. 
+                    Just drop your executable right here, and we'll make that sh*t untouchable.
+                    <span className="block mt-2 text-red-400 font-bold text-xs">AUTO-DETECTION ACTIVE - NO SETUP NEEDED</span>
                   </p>
                   
                   <FileUploader 
@@ -498,9 +499,9 @@ export default function Home() {
                             </svg>
                           </div>
                           : 
-                          <div className="flex items-center justify-center">
+                          <div className="flex items-center justify-center gangster-font tracking-wider text-lg">
                             <Shield className="mr-2 h-5 w-5" />
-                            Apply Protection
+                            LOCK IT DOWN
                           </div>
                         }
                       </Button>
@@ -549,22 +550,22 @@ export default function Home() {
                   You don't have any recent protection jobs.
                   <br />Try protecting an executable file first!
                 </p>
-                <div className="flex flex-col md:flex-row gap-4 justify-center">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button 
                     variant="outline" 
                     onClick={() => setActiveTab("upload")}
-                    className="border-red-900/30 hover:border-red-700/50 bg-transparent text-red-400"
+                    className="border-red-900/30 hover:border-red-700/50 bg-transparent text-red-400 w-full sm:w-auto gangster-font tracking-wide"
                   >
-                    Upload an Executable
+                    START PROTECTIN'
                   </Button>
                   <Button 
-                    className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 shadow-glow-sm"
+                    className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 shadow-glow-sm w-full sm:w-auto gangster-font tracking-wide"
                     onClick={() => window.open('https://www.paypal.com/donate?business=tripl3sixmafia@gmail.com', '_blank')}
                   >
                     <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
                       <path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 0 0-.794.68l-.04.22-.63 4.084-.03.114a.804.804 0 0 1-.794.679h-2.776a.483.483 0 0 1-.477-.558l.922-5.832-.02.124a.804.804 0 0 1 .793-.681h1.662a7.132 7.132 0 0 0 7.118-6.161c.26-1.659-.03-2.94-.88-3.877-.037-.042-.072-.085-.108-.127a5.748 5.748 0 0 0-.973-.784c.46.709.697 1.61.602 2.722m-9.709 1.391c.077-.47.154-.94.232-.139a6.089 6.089 0 0 1 2.82-2.208 9.542 9.542 0 0 1 3.105-.471h.365c.196 0 .387.012.574.034a4.551 4.551 0 0 1 1.989.615c-.587-3.26-3.387-4.393-6.917-4.393h-2.79a.804.804 0 0 0-.794.68l-2.85 18.05a.483.483 0 0 0 .477.558h3.12l.781-4.975z"/>
                     </svg>
-                    Donate with PayPal
+                    CASH DROP
                   </Button>
                 </div>
               </div>
@@ -582,20 +583,20 @@ export default function Home() {
                   layers of sophisticated protection techniques to secure your executable files.
                 </p>
                 
-                <div className="flex items-center p-4 bg-black/50 border border-red-900/30 rounded-lg mb-6">
-                  <div className="flex-1">
-                    <h5 className="text-white font-medium mb-1">Support Development</h5>
-                    <p className="text-xs text-gray-400">If you find this tool useful, consider supporting the developer with a donation</p>
+                <div className="flex flex-col sm:flex-row items-center p-4 bg-black/50 border border-red-900/30 rounded-lg mb-6">
+                  <div className="flex-1 mb-3 sm:mb-0">
+                    <h5 className="text-white font-semibold mb-1 gangster-font tracking-wide">Support the 3-6</h5>
+                    <p className="text-xs text-gray-400">If you find this tool useful, toss some cash our way</p>
                   </div>
                   <Button 
                     size="sm"
-                    className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500"
+                    className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 shadow-glow-sm w-full sm:w-auto"
                     onClick={() => window.open('https://www.paypal.com/donate?business=tripl3sixmafia@gmail.com', '_blank')}
                   >
                     <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
                       <path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 0 0-.794.68l-.04.22-.63 4.084-.03.114a.804.804 0 0 1-.794.679h-2.776a.483.483 0 0 1-.477-.558l.922-5.832-.02.124a.804.804 0 0 1 .793-.681h1.662a7.132 7.132 0 0 0 7.118-6.161c.26-1.659-.03-2.94-.88-3.877-.037-.042-.072-.085-.108-.127a5.748 5.748 0 0 0-.973-.784c.46.709.697 1.61.602 2.722m-9.709 1.391c.077-.47.154-.94.232-.139a6.089 6.089 0 0 1 2.82-2.208 9.542 9.542 0 0 1 3.105-.471h.365c.196 0 .387.012.574.034a4.551 4.551 0 0 1 1.989.615c-.587-3.26-3.387-4.393-6.917-4.393h-2.79a.804.804 0 0 0-.794.68l-2.85 18.05a.483.483 0 0 0 .477.558h3.12l.781-4.975z"/>
                     </svg>
-                    Donate
+                    DONATE
                   </Button>
                 </div>
                 
