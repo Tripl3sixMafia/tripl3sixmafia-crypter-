@@ -1,15 +1,30 @@
 import React from "react";
 import { SupportedLanguage } from "@/pages/Home";
 import { FileCode, Hash, Code, Terminal, Wrench, Server, Database, CircuitBoard, Cpu } from "lucide-react";
-import { SiJavascript, SiPython, SiJava, SiPhp, SiCsharp, SiRuby, SiGo, SiRust, SiCplusplus, SiC, SiSwift, SiKotlin, SiDart, SiTypescript } from "react-icons/si";
+import { 
+  SiJavascript, 
+  SiPython, 
+  SiNodedotjs, 
+  SiPhp, 
+  SiDotnet, 
+  SiRuby, 
+  SiGo, 
+  SiRust, 
+  SiCplusplus, 
+  SiC, 
+  SiSwift, 
+  SiKotlin, 
+  SiDart, 
+  SiTypescript 
+} from "react-icons/si";
 
 const languages: { id: SupportedLanguage; name: string; icon: React.ReactNode }[] = [
   { id: "javascript", name: "JavaScript", icon: <SiJavascript className="h-8 w-8" /> },
   { id: "typescript", name: "TypeScript", icon: <SiTypescript className="h-8 w-8" /> },
   { id: "python", name: "Python", icon: <SiPython className="h-8 w-8" /> },
-  { id: "java", name: "Java", icon: <SiJava className="h-8 w-8" /> },
+  { id: "java", name: "Java", icon: <SiNodedotjs className="h-8 w-8" /> },
   { id: "php", name: "PHP", icon: <SiPhp className="h-8 w-8" /> },
-  { id: "csharp", name: "C#", icon: <SiCsharp className="h-8 w-8" /> },
+  { id: "csharp", name: "C#", icon: <SiDotnet className="h-8 w-8" /> },
   { id: "cpp", name: "C++", icon: <SiCplusplus className="h-8 w-8" /> },
   { id: "c", name: "C", icon: <SiC className="h-8 w-8" /> },
   { id: "ruby", name: "Ruby", icon: <SiRuby className="h-8 w-8" /> },

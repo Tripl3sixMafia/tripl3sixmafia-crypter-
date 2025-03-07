@@ -16,8 +16,13 @@ import ProcessingState from "../components/ProcessingState";
 import AdvancedOptions from "../components/AdvancedOptions";
 
 // Define all interfaces locally to avoid import issues
-export type SupportedLanguage = 'javascript' | 'python' | 'java' | 'php' | 'csharp' | 'vbnet' | 'fsharp' | 'powershell' | 'batch' | 'assembly';
-export type FileType = 'js' | 'py' | 'java' | 'php' | 'cs' | 'vb' | 'fs' | 'ps1' | 'bat' | 'exe' | 'dll' | 'asm';
+export type SupportedLanguage = 
+  'javascript' | 'typescript' | 'python' | 'java' | 'php' | 'csharp' | 'cpp' | 'c' | 
+  'ruby' | 'go' | 'rust' | 'swift' | 'kotlin' | 'dart' | 'vbnet' | 'fsharp' | 
+  'powershell' | 'batch' | 'assembly';
+export type FileType = 'js' | 'ts' | 'py' | 'java' | 'php' | 'cs' | 'cpp' | 'c' | 
+  'rb' | 'go' | 'rs' | 'swift' | 'kt' | 'dart' | 'vb' | 'fs' | 'ps1' | 'bat' | 
+  'exe' | 'dll' | 'asm';
 export type ObfuscationLevel = 'light' | 'medium' | 'heavy' | 'custom' | 'maximum';
 
 export interface AdditionalProtections {
