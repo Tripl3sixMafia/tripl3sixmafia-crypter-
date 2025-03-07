@@ -7,6 +7,7 @@ import { obfuscationOptionsSchema } from "@shared/schema";
 import { z } from "zod";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
+import os from "os";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Configure multer for memory storage
@@ -109,6 +110,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
         message: error instanceof Error ? error.message : "Internal server error" 
       });
     }
+  });
+
+  // Health check endpoint for deployment monitoring
+  app.get('/health', (req, res) => {
+    res.status(200).json({
+      status: 'up',
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime(),
+      memory: process.memoryUsage(),
+      hostname: os.hostname(),
+      message: "TRIPL3SIXMAFIA CRYPTER running strong 🔥"
+    });
   });
 
   const httpServer = createServer(app);
