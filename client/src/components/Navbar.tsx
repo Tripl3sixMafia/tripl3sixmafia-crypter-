@@ -20,12 +20,12 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0 flex items-center">
-              <div className="h-9 w-9 bg-gradient-to-br from-red-900 to-red-700 rounded-md flex items-center justify-center text-white mr-2 shadow-glow">
-                <Shield className="h-5 w-5" />
+              <div className="h-10 w-10 rounded-full flex items-center justify-center text-white mr-2 overflow-hidden border border-red-600">
+                <img src="/images/logo.svg" alt="3-6 Logo" className="h-full w-full object-cover" />
               </div>
               <Link href="/">
-                <span className="font-bold text-xl text-white cursor-pointer">
-                  TRIPL3SIXMAFIA<span className="text-gradient bg-gradient-to-r from-red-600 to-red-400">CRYPTER</span>
+                <span className="font-bold text-xl text-white cursor-pointer tracking-wider">
+                  TRIPL3SIX<span className="text-gradient bg-gradient-to-r from-red-600 to-red-400">MAFIA</span>
                 </span>
               </Link>
             </div>

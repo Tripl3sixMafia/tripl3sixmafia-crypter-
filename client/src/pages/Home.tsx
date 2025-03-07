@@ -352,35 +352,54 @@ export default function Home() {
       <main className="flex-grow">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           {/* Hero section */}
-          <div className="px-4 py-8 sm:px-0 mb-8">
+          <div className="px-4 py-12 sm:px-0 mb-8 bg-black/30 border-y border-red-900/30">
             <div className="text-center">
-              <div className="flex justify-center items-center mb-4">
-                <Shield className="h-12 w-12 text-red-600 mr-3" />
-                <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-red-700 via-red-500 to-red-400 text-transparent bg-clip-text">
-                  TRIPL3SIXMAFIA CRYPTER
+              <div className="mb-8">
+                <img src="/images/logo.svg" alt="3-6 Logo" className="w-40 h-40 mx-auto mb-5" />
+              </div>
+              <div className="relative mb-6">
+                <h1 className="text-5xl md:text-7xl font-bold text-graffiti text-white mb-2 text-street">
+                  TRIPL3SIXMAFIA <span className="bg-gradient-to-r from-red-700 via-red-500 to-red-400 text-transparent bg-clip-text">CRYPTER</span>
                 </h1>
+                <div className="text-sm tracking-widest text-red-400 opacity-80 font-bold -mt-1 mb-3 uppercase">
+                  Most Known Unknown | 3-6 Mafia
+                </div>
+                <p className="text-xl text-gray-300 max-w-3xl mx-auto mt-4">
+                  Next-Gen Executable Protection System
+                </p>
               </div>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-6">
-                Advanced Executable Protection System
-              </p>
-              <div className="flex flex-wrap justify-center gap-3 mb-6">
-                <Badge variant="outline" className="bg-black/40 text-red-400 border-red-900/50 px-3 py-1">
-                  <Lock className="h-3.5 w-3.5 mr-1" /> Automatic Protection
+              
+              <div className="flex flex-wrap justify-center gap-4 mb-8">
+                <Badge variant="outline" className="bg-black/50 text-red-400 border-red-900/50 px-4 py-1.5 text-sm">
+                  <Lock className="h-4 w-4 mr-1.5" /> Anti-Detection
                 </Badge>
-                <Badge variant="outline" className="bg-black/40 text-red-400 border-red-900/50 px-3 py-1">
-                  <FileCode className="h-3.5 w-3.5 mr-1" /> Executable Files
+                <Badge variant="outline" className="bg-black/50 text-red-400 border-red-900/50 px-4 py-1.5 text-sm">
+                  <FileCode className="h-4 w-4 mr-1.5" /> File Spoofing
                 </Badge>
-                <Badge variant="outline" className="bg-black/40 text-red-400 border-red-900/50 px-3 py-1">
-                  <Zap className="h-3.5 w-3.5 mr-1" /> Undetectable
+                <Badge variant="outline" className="bg-black/50 text-red-400 border-red-900/50 px-4 py-1.5 text-sm">
+                  <Zap className="h-4 w-4 mr-1.5" /> VM Evasion
                 </Badge>
-                <Badge variant="outline" className="bg-black/40 text-red-400 border-red-900/50 px-3 py-1">
-                  <AlertTriangle className="h-3.5 w-3.5 mr-1" /> Anti-Analysis
+                <Badge variant="outline" className="bg-black/50 text-red-400 border-red-900/50 px-4 py-1.5 text-sm">
+                  <AlertTriangle className="h-4 w-4 mr-1.5" /> Registry Mods
                 </Badge>
               </div>
-              <p className="text-sm text-gray-400 max-w-2xl mx-auto">
-                Shield your executable files from prying eyes with our sophisticated protection system.
-                Simply upload your file and our system will automatically implement optimal security measures.
-              </p>
+              
+              <div className="max-w-3xl mx-auto px-5 py-4 bg-gradient-to-r from-black/70 to-black/80 border-l-4 border-red-700 rounded-r-lg shadow-glow-sm">
+                <p className="text-base text-gray-300">
+                  Protect your executables with industry-leading techniques used by the pros.
+                  Our system detects file types automatically and implements the most effective protection.
+                </p>
+              </div>
+              
+              <div className="mt-8 mb-2">
+                <Button 
+                  onClick={() => document.getElementById('upload-section')?.scrollIntoView({behavior: 'smooth'})}
+                  size="lg"
+                  className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 text-white font-bold py-2.5 px-6 rounded-lg shadow-glow-md animate-pulse"
+                >
+                  START PROTECTING NOW
+                </Button>
+              </div>
             </div>
           </div>
           
