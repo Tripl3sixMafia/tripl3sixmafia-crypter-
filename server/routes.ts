@@ -268,12 +268,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Generate a random password for email-only signup
         const randomPassword = crypto.randomBytes(8).toString('hex');
         userId = await storage.createUser({
+          name: "PayPal Customer",
           email,
+          phone: "0000000000", // Default phone
           password: randomPassword,
+          confirmPassword: randomPassword,
           isVerified: true // Auto-verify for PayPal users
         });
       } else {
         userId = existingUser.id;
+        // Update their verification status
+        await storage.updateUserVerification(userId, true);
       }
       
       // Generate a license key

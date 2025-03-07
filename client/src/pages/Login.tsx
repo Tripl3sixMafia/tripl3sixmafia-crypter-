@@ -75,7 +75,7 @@ export default function Login() {
 
     setIsSubmitting(true);
     try {
-      await apiRequest('/api/admin-bypass', {
+      await apiRequest('/api/admin-premium', {
         method: 'POST',
         body: JSON.stringify({ code: adminCode }),
         headers: {
