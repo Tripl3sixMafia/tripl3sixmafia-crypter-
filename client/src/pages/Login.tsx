@@ -6,17 +6,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { loginSchema } from "../../shared/schema";
+import { loginSchema } from "@shared/schema";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { useLocation } from 'wouter';
 import { ArrowRight, Shield, ShieldCheck, Lock } from "lucide-react";
 
-// Extend the schema for front-end validation
-const userLoginSchema = loginSchema.extend({
-  email: z.string().email("Valid email required"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
+// Use the schema directly
+const userLoginSchema = loginSchema;
 
 export default function Login() {
   const { toast } = useToast();

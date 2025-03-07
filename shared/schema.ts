@@ -120,25 +120,16 @@ export const obfuscationResultSchema = z.object({
 });
 
 // User schemas
-export const registerUserSchema = createInsertSchema(users)
-  .omit({ 
-    id: true, 
-    passwordHash: true, 
-    isVerified: true, 
-    verificationCode: true, 
-    verificationExpiry: true, 
-    isPremium: true,
-    createdAt: true,
-    updatedAt: true
-  })
-  .extend({
-    password: z.string().min(8),
-    confirmPassword: z.string().min(8)
-  })
-  .refine(data => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
+export const registerUserSchema = z.object({
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Valid email required"),
+  phone: z.string().min(10, "Phone number must be at least 10 digits"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+  confirmPassword: z.string().min(8, "Confirm password must be at least 8 characters"),
+}).refine(data => data.password === data.confirmPassword, {
+  message: "Passwords do not match",
+  path: ["confirmPassword"],
+});
 
 export const verifyOtpSchema = z.object({
   email: z.string().email(),

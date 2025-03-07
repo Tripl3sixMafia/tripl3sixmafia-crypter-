@@ -1,18 +1,20 @@
-// Re-export types from schema to make them accessible to both client and server
-import {
-  SupportedLanguage,
-  ObfuscationOptions,
-  ObfuscationResult,
-  AdditionalProtections,
-  OutputOptions,
-  FileType
-} from './schema';
+// This file is for shared interfaces between client and server
 
-export {
-  SupportedLanguage,
-  ObfuscationOptions,
-  ObfuscationResult,
-  AdditionalProtections,
-  OutputOptions,
-  FileType
-};
+import { ObfuscationOptions, ObfuscationResult } from './schema';
+
+export interface AdvancedOptionsProps {
+  options: ObfuscationOptions;
+  outputOptions: {
+    makeExecutable: boolean;
+    iconPath?: string;
+    targetPlatform: "windows" | "linux" | "macos" | "cross-platform";
+    obfuscationStrength: "normal" | "aggressive" | "maximum";
+    includeRuntime: boolean;
+    compressionLevel: number;
+    hiddenConsole: boolean;
+  };
+  onChangeOptions: (options: ObfuscationOptions) => void;
+  onChangeOutputOptions: (options: any) => void;
+  isExecutableFile: boolean;
+  onIconSelect: (file: File | null) => void;
+}
