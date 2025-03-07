@@ -142,7 +142,7 @@ export default function Home() {
         
         // For executables, automatically enable additional protections
         if (executableExtensions.includes(extension)) {
-          setOptions(prev => ({
+          setOptions((prev: ObfuscationOptions) => ({
             ...prev,
             nativeProtection: true,
             antiDecompilation: true,
@@ -154,7 +154,7 @@ export default function Home() {
             }
           }));
           
-          setOutputOptions(prev => ({
+          setOutputOptions((prev: OutputOptions) => ({
             ...prev,
             makeExecutable: true
           }));
@@ -196,7 +196,7 @@ export default function Home() {
     
     // Update options to reflect custom icon selection
     if (iconFile) {
-      setOptions(prev => ({
+      setOptions((prev: ObfuscationOptions) => ({
         ...prev,
         additional: {
           ...prev.additional,

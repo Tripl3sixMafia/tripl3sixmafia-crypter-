@@ -1,5 +1,5 @@
 import React from "react";
-import { AdditionalProtections, OutputOptions } from "../../shared/schema";
+import { AdditionalProtections, OutputOptions } from "../../shared/interfaces";
 import { ObfuscationOptions } from "../pages/Home";
 import { Switch } from "../components/ui/switch";
 import { Label } from "../components/ui/label";
