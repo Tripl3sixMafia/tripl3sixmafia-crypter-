@@ -1,17 +1,20 @@
-import React, { useEffect } from "react";
-import Navbar from "../components/Navbar";
-import FileUploader from "../components/FileUploader";
-import ObfuscationOptions from "../components/ObfuscationOptions";
-import ProcessingState from "../components/ProcessingState";
-import ResultsView from "../components/ResultsView";
-import InfoSection from "../components/InfoSection";
-import Footer from "../components/Footer";
-import AdvancedOptions from "../components/AdvancedOptions";
-import IconSelector from "../components/IconSelector";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Shield, Lock, FileCode, Zap, AlertTriangle } from "lucide-react";
+import FileSpoofing, { FileType as SpoofFileType, fileTypeOptions } from "@/components/FileSpoofing";
+
+// Components
+import Navbar from "../components/Navbar";
+import FileUploader from "../components/FileUploader";
+import ObfuscationOptions from "../components/ObfuscationOptions";
+import ResultsView from "../components/ResultsView";
+import ProcessingState from "../components/ProcessingState";
+import AdvancedOptions from "../components/AdvancedOptions";
+
 // Define all interfaces locally to avoid import issues
 export type SupportedLanguage = 'javascript' | 'python' | 'java' | 'php' | 'csharp' | 'vbnet' | 'fsharp' | 'powershell' | 'batch' | 'assembly';
 export type FileType = 'js' | 'py' | 'java' | 'php' | 'cs' | 'vb' | 'fs' | 'ps1' | 'bat' | 'exe' | 'dll' | 'asm';
@@ -39,9 +42,6 @@ export interface OutputOptions {
   compressionLevel: number;
   hiddenConsole: boolean;
 }
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Shield, Lock, FileCode, Zap, AlertTriangle } from "lucide-react";
 
 export interface ObfuscationOptions {
   level: ObfuscationLevel;
@@ -126,6 +126,11 @@ export default function Home() {
   const [result, setResult] = useState<ObfuscationResult | null>(null);
   const [detectedLanguage, setDetectedLanguage] = useState<SupportedLanguage | null>(null);
   const [isExecutableFile, setIsExecutableFile] = useState<boolean>(false);
+  
+  // File spoofing state
+  const [spoofingEnabled, setSpoofingEnabled] = useState<boolean>(false);
+  const [selectedSpoofType, setSelectedSpoofType] = useState<SpoofFileType | null>(null);
+  
   const { toast } = useToast();
 
   // Function to detect file type and language automatically
@@ -163,19 +168,19 @@ export default function Home() {
         
         // For executables, automatically enable additional protections
         if (executableExtensions.includes(extension)) {
-          setOptions((prev: ObfuscationOptions) => ({
+          setOptions((prev) => ({
             ...prev,
             nativeProtection: true,
             antiDecompilation: true,
             makeExecutable: true,
             additional: {
-              ...prev.additional,
+              ...prev.additional!,
               antiDebugging: true,
               antiDumping: true
             }
           }));
           
-          setOutputOptions((prev: OutputOptions) => ({
+          setOutputOptions((prev) => ({
             ...prev,
             makeExecutable: true
           }));
@@ -217,13 +222,33 @@ export default function Home() {
     
     // Update options to reflect custom icon selection
     if (iconFile) {
-      setOptions((prev: ObfuscationOptions) => ({
+      setOptions((prev) => ({
         ...prev,
         additional: {
-          ...prev.additional,
+          ...prev.additional!,
           customIcon: true
         }
       }));
+    }
+  };
+
+  const handleSpoofingToggle = (enabled: boolean) => {
+    setSpoofingEnabled(enabled);
+    if (!enabled) {
+      setSelectedSpoofType(null);
+    }
+  };
+
+  const handleSpoofTypeChange = (fileType: SpoofFileType) => {
+    setSelectedSpoofType(fileType);
+    // If user selects a spoof type, we should use its icon automatically
+    const selectedOption = fileTypeOptions.find(opt => opt.type === fileType);
+    if (selectedOption) {
+      // The icon selection would be handled by the backend
+      toast({
+        title: "Spoof type selected",
+        description: `Your executable will be disguised as a ${selectedOption.name}`,
+      });
     }
   };
 
@@ -245,6 +270,12 @@ export default function Home() {
     
     if (customIcon && options.additional?.customIcon) {
       formData.append("icon", customIcon);
+    }
+
+    // Add file spoofing options if enabled
+    if (spoofingEnabled && selectedSpoofType) {
+      formData.append("spoofing", "true");
+      formData.append("spoofType", selectedSpoofType);
     }
 
     obfuscationMutation.mutate(formData);
@@ -364,6 +395,16 @@ export default function Home() {
                   onObfuscate={handleObfuscate}
                 />
                 
+                {/* File Spoofing Options (New component) */}
+                {isExecutableFile && (
+                  <FileSpoofing
+                    enabled={spoofingEnabled}
+                    selectedFileType={selectedSpoofType}
+                    onToggle={handleSpoofingToggle}
+                    onSelectFileType={handleSpoofTypeChange}
+                  />
+                )}
+                
                 {/* Advanced Options */}
                 <AdvancedOptions 
                   options={options}
@@ -434,8 +475,8 @@ export default function Home() {
                       <Shield className="h-4 w-4 text-red-500" />
                     </div>
                     <div>
-                      <span className="font-medium text-white">Native Code Protection</span>
-                      <p className="text-sm text-gray-400 mt-1">Converts managed code into native machine code that is extremely difficult to reverse engineer.</p>
+                      <span className="font-medium text-white">File Obfuscation & Encryption</span>
+                      <p className="text-sm text-gray-400">Makes your executable undecipherable to reverse engineering tools</p>
                     </div>
                   </li>
                   <li className="flex items-start">
@@ -443,8 +484,8 @@ export default function Home() {
                       <AlertTriangle className="h-4 w-4 text-red-500" />
                     </div>
                     <div>
-                      <span className="font-medium text-white">Anti-Debugging Mechanisms</span>
-                      <p className="text-sm text-gray-400 mt-1">Prevents debugging tools from analyzing your executable at runtime.</p>
+                      <span className="font-medium text-white">Anti-Analysis Protection</span>
+                      <p className="text-sm text-gray-400">Detects and prevents debuggers, virtual machines, and sandboxes</p>
                     </div>
                   </li>
                   <li className="flex items-start">
@@ -452,8 +493,8 @@ export default function Home() {
                       <FileCode className="h-4 w-4 text-red-500" />
                     </div>
                     <div>
-                      <span className="font-medium text-white">String Encryption</span>
-                      <p className="text-sm text-gray-400 mt-1">Encrypts all strings in your executable to hide sensitive information and internal logic.</p>
+                      <span className="font-medium text-white">File Disguise & Spoofing</span>
+                      <p className="text-sm text-gray-400">Makes your executable appear as other harmless file types like PDFs or images</p>
                     </div>
                   </li>
                   <li className="flex items-start">
@@ -461,52 +502,36 @@ export default function Home() {
                       <Zap className="h-4 w-4 text-red-500" />
                     </div>
                     <div>
-                      <span className="font-medium text-white">Anti-Tampering</span>
-                      <p className="text-sm text-gray-400 mt-1">Ensures your executable can detect and respond to any modification attempts.</p>
+                      <span className="font-medium text-white">Runtime Protection</span>
+                      <p className="text-sm text-gray-400">Self-defending mechanisms that activate during execution</p>
                     </div>
                   </li>
                 </ul>
                 
-                <div className="mt-8 p-5 bg-red-900/20 border border-red-900/30 rounded-lg">
-                  <div className="flex items-center mb-2">
-                    <span className="pro-badge flex items-center mr-3">PRO</span>
-                    <h4 className="text-lg font-medium text-white">Pro Features</h4>
-                  </div>
-                  <p className="text-gray-300 mb-3">
-                    Upgrade to Pro to access additional advanced protection features:
+                <h4 className="text-lg font-medium text-white mt-8 mb-3 flex items-center">
+                  <Zap className="h-4 w-4 text-red-500 mr-2" />
+                  How It Works
+                </h4>
+                <p className="text-gray-300 mb-6">
+                  Our system analyzes your executable and automatically implements the most effective protection
+                  strategies for your specific file. We use advanced techniques like polymorphic encryption, 
+                  anti-debug traps, and code virtualization to ensure maximum security.
+                </p>
+                
+                <div className="bg-black/30 border border-red-900/20 rounded-lg p-4 mt-6">
+                  <h5 className="text-white font-medium flex items-center">
+                    <FileCode className="h-4 w-4 text-red-500 mr-2" />New: File Spoofing Technology
+                  </h5>
+                  <p className="text-sm text-gray-400 mt-2">
+                    Our latest feature allows you to disguise your executable as other file types (PDF, images, documents)
+                    to maintain complete stealth. The file keeps full functionality while appearing as something else entirely.
                   </p>
-                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <li className="text-sm text-white flex items-center">
-                      <div className="h-1.5 w-1.5 bg-red-500 rounded-full mr-2"></div>
-                      File Disassembly
-                    </li>
-                    <li className="text-sm text-white flex items-center">
-                      <div className="h-1.5 w-1.5 bg-red-500 rounded-full mr-2"></div>
-                      Manual String Crypting
-                    </li>
-                    <li className="text-sm text-white flex items-center">
-                      <div className="h-1.5 w-1.5 bg-red-500 rounded-full mr-2"></div>
-                      Custom Library Injection
-                    </li>
-                    <li className="text-sm text-white flex items-center">
-                      <div className="h-1.5 w-1.5 bg-red-500 rounded-full mr-2"></div>
-                      Advanced Analysis Reports
-                    </li>
-                  </ul>
-                  <div className="mt-4">
-                    <Button className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 shadow-glow-sm">
-                      Upgrade to Pro
-                    </Button>
-                  </div>
                 </div>
               </div>
             )}
           </div>
-          
-          {(activeTab === "upload" || activeTab === "results") && <InfoSection />}
         </div>
       </main>
-      <Footer />
     </div>
   );
 }
