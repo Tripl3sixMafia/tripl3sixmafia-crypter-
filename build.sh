@@ -1,11 +1,20 @@
 #!/bin/bash
-# Build script for Render deployment
+# Build script for TRIPL3SIXMAFIA CRYPTER deployment on Render
 
-# Build the frontend
+# Install dependencies
+echo "Installing dependencies..."
+npm install
+
+# Build the application
+echo "Building the application..."
 npm run build
 
 # Ensure environment variables are set correctly
-echo "Setting up environment for production"
+echo "Setting up environment for production..."
 export NODE_ENV=production
 
-echo "Build completed successfully!"
+# Make the dist directory executable
+echo "Setting permissions..."
+chmod -R 755 dist
+
+echo "TRIPL3SIXMAFIA CRYPTER build completed successfully! 🔥"
