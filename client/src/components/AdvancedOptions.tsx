@@ -1,15 +1,14 @@
 import React from "react";
-import { ObfuscationOptions, OutputOptions } from "../pages/Home";
-import type { AdditionalProtections } from "../../shared/schema";
-import { Switch } from "../components/ui/switch";
-import { Label } from "../components/ui/label";
-import { Slider } from "../components/ui/slider";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
-import { Checkbox } from "../components/ui/checkbox";
-import { Input } from "../components/ui/input";
-import { Button } from "../components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
+import type { ObfuscationOptions, OutputOptions, AdditionalProtections } from "@/../../shared/interfaces";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Slider } from "@/components/ui/slider";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Shield, FileCode, Zap, Lock, AlertTriangle } from "lucide-react";
 
 interface AdvancedOptionsProps {
@@ -465,7 +464,7 @@ export default function AdvancedOptions({
                     
                     {options.additional.domainLock && options.additional.domainLock.length > 0 && (
                       <div className="mt-2 flex flex-wrap gap-2">
-                        {options.additional.domainLock.map((domain, index) => (
+                        {options.additional.domainLock.map((domain: string, index: number) => (
                           <div key={index} className="bg-black px-2 py-1 rounded-md flex items-center text-sm border border-red-900/30 text-white">
                             {domain}
                             <button 
@@ -476,7 +475,7 @@ export default function AdvancedOptions({
                                   ...options,
                                   additional: {
                                     ...options.additional,
-                                    domainLock: options.additional.domainLock?.filter((_, i) => i !== index)
+                                    domainLock: options.additional.domainLock?.filter((_: string, i: number) => i !== index)
                                   }
                                 });
                               }}
