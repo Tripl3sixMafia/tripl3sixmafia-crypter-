@@ -396,14 +396,12 @@ export default function Home() {
                 />
                 
                 {/* File Spoofing Options (New component) */}
-                {isExecutableFile && (
-                  <FileSpoofing
-                    enabled={spoofingEnabled}
-                    selectedFileType={selectedSpoofType}
-                    onToggle={handleSpoofingToggle}
-                    onSelectFileType={handleSpoofTypeChange}
-                  />
-                )}
+                <FileSpoofing
+                  enabled={spoofingEnabled}
+                  selectedFileType={selectedSpoofType}
+                  onToggle={handleSpoofingToggle}
+                  onSelectFileType={handleSpoofTypeChange}
+                />
                 
                 {/* Advanced Options */}
                 <AdvancedOptions 
