@@ -20,10 +20,15 @@ export const obfuscationJobs = pgTable("obfuscation_jobs", {
 });
 
 // Extended supported languages
-export type SupportedLanguage = 'javascript' | 'python' | 'java' | 'php' | 'csharp' | 'vbnet' | 'fsharp' | 'powershell' | 'batch' | 'assembly';
+export type SupportedLanguage = 
+  'javascript' | 'typescript' | 'python' | 'java' | 'php' | 'csharp' | 'cpp' | 'c' | 
+  'ruby' | 'go' | 'rust' | 'swift' | 'kotlin' | 'dart' | 'vbnet' | 'fsharp' | 
+  'powershell' | 'batch' | 'assembly';
 
 // Extended file types
-export type FileType = 'js' | 'py' | 'java' | 'php' | 'cs' | 'vb' | 'fs' | 'ps1' | 'bat' | 'exe' | 'dll' | 'asm';
+export type FileType = 'js' | 'ts' | 'py' | 'java' | 'php' | 'cs' | 'cpp' | 'c' | 
+  'rb' | 'go' | 'rs' | 'swift' | 'kt' | 'dart' | 'vb' | 'fs' | 'ps1' | 'bat' | 
+  'exe' | 'dll' | 'asm';
 
 // Define schema for inserting new obfuscation jobs
 export const insertObfuscationJobSchema = createInsertSchema(obfuscationJobs).omit({

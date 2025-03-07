@@ -140,18 +140,46 @@ export default function Home() {
       
       // Map file extensions to languages
       const extensionToLanguage: Record<string, SupportedLanguage> = {
+        // JavaScript/TypeScript
         'js': 'javascript',
-        'ts': 'javascript',
         'jsx': 'javascript',
-        'tsx': 'javascript',
+        'ts': 'typescript',
+        'tsx': 'typescript',
+        'mjs': 'javascript',
+        
+        // Web languages
         'py': 'python',
         'java': 'java',
         'php': 'php',
+        
+        // .NET languages
         'cs': 'csharp',
         'vb': 'vbnet',
         'fs': 'fsharp',
+        
+        // C/C++ variants
+        'c': 'c',
+        'cpp': 'cpp',
+        'cc': 'cpp',
+        'h': 'c',
+        'hpp': 'cpp',
+        
+        // Mobile development
+        'swift': 'swift',
+        'kt': 'kotlin',
+        'dart': 'dart',
+        
+        // Modern languages
+        'go': 'go',
+        'rs': 'rust',
+        'rb': 'ruby',
+        
+        // Scripts
         'ps1': 'powershell',
         'bat': 'batch',
+        'sh': 'batch',
+        
+        // Binaries
         'exe': 'csharp',
         'dll': 'csharp',
         'asm': 'assembly'
