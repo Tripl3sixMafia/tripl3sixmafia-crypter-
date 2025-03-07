@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: tripl3sixmafia-crypter
+    env: node
+    buildCommand: chmod +x build.sh && ./build.sh
+    startCommand: node dist/index.js
+    region: oregon # or choose a region closer to your users
+    plan: free # can be upgraded later
+    healthCheckPath: /
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000" # Render assigns a PORT, but we set a fallback
+    autoDeploy: true
