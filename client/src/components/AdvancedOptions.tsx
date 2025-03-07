@@ -1,15 +1,15 @@
 import React from "react";
-import { AdditionalProtections, OutputOptions } from "@/shared/schema";
-import { ObfuscationOptions } from "@/pages/Home";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { AdditionalProtections, OutputOptions } from "../../shared/schema";
+import { ObfuscationOptions } from "../pages/Home";
+import { Switch } from "../components/ui/switch";
+import { Label } from "../components/ui/label";
+import { Slider } from "../components/ui/slider";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "../components/ui/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "../components/ui/tabs";
+import { Checkbox } from "../components/ui/checkbox";
+import { Input } from "../components/ui/input";
+import { Button } from "../components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../components/ui/select";
 
 interface AdvancedOptionsProps {
   options: ObfuscationOptions;

@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
-import Navbar from "@/components/Navbar";
-import LanguageSelector from "@/components/LanguageSelector";
-import FileUploader from "@/components/FileUploader";
-import ObfuscationOptions from "@/components/ObfuscationOptions";
-import ProcessingState from "@/components/ProcessingState";
-import ResultsView from "@/components/ResultsView";
-import InfoSection from "@/components/InfoSection";
-import Footer from "@/components/Footer";
-import AdvancedOptions from "@/components/AdvancedOptions";
-import IconSelector from "@/components/IconSelector";
+import Navbar from "../components/Navbar";
+import LanguageSelector from "../components/LanguageSelector";
+import FileUploader from "../components/FileUploader";
+import ObfuscationOptions from "../components/ObfuscationOptions";
+import ProcessingState from "../components/ProcessingState";
+import ResultsView from "../components/ResultsView";
+import InfoSection from "../components/InfoSection";
+import Footer from "../components/Footer";
+import AdvancedOptions from "../components/AdvancedOptions";
+import IconSelector from "../components/IconSelector";
 import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -18,7 +18,7 @@ import {
   ObfuscationOptions as SchemaOptions, 
   AdditionalProtections,
   OutputOptions 
-} from "@/shared/schema";
+} from "../../shared/interfaces";
 
 export type ObfuscationLevel = 'light' | 'medium' | 'heavy' | 'custom' | 'maximum';
 
@@ -296,6 +296,16 @@ export default function Home() {
                   options={options} 
                   onChange={setOptions}
                   onObfuscate={handleObfuscate}
+                />
+                
+                {/* Advanced Options */}
+                <AdvancedOptions 
+                  options={options}
+                  outputOptions={outputOptions}
+                  onChangeOptions={setOptions}
+                  onChangeOutputOptions={setOutputOptions}
+                  isExecutableFile={isExecutableFile}
+                  onIconSelect={handleIconChange}
                 />
                 
                 {obfuscationMutation.isPending && (
