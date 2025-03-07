@@ -357,7 +357,7 @@ export default function Home() {
               <div className="flex justify-center items-center mb-4">
                 <Shield className="h-12 w-12 text-red-600 mr-3" />
                 <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-red-700 via-red-500 to-red-400 text-transparent bg-clip-text">
-                  DLINQNT SHIELD
+                  TRIPL3SIXMAFIA CRYPTER
                 </h1>
               </div>
               <p className="text-xl text-gray-300 max-w-3xl mx-auto mb-6">
@@ -538,8 +538,14 @@ export default function Home() {
                   >
                     Upload an Executable
                   </Button>
-                  <Button className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 shadow-glow-sm">
-                    Upgrade to Pro
+                  <Button 
+                    className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 shadow-glow-sm"
+                    onClick={() => window.open('https://www.paypal.com/donate?business=tripl3sixmafia@gmail.com', '_blank')}
+                  >
+                    <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 0 0-.794.68l-.04.22-.63 4.084-.03.114a.804.804 0 0 1-.794.679h-2.776a.483.483 0 0 1-.477-.558l.922-5.832-.02.124a.804.804 0 0 1 .793-.681h1.662a7.132 7.132 0 0 0 7.118-6.161c.26-1.659-.03-2.94-.88-3.877-.037-.042-.072-.085-.108-.127a5.748 5.748 0 0 0-.973-.784c.46.709.697 1.61.602 2.722m-9.709 1.391c.077-.47.154-.94.232-.139a6.089 6.089 0 0 1 2.82-2.208 9.542 9.542 0 0 1 3.105-.471h.365c.196 0 .387.012.574.034a4.551 4.551 0 0 1 1.989.615c-.587-3.26-3.387-4.393-6.917-4.393h-2.79a.804.804 0 0 0-.794.68l-2.85 18.05a.483.483 0 0 0 .477.558h3.12l.781-4.975z"/>
+                    </svg>
+                    Donate with PayPal
                   </Button>
                 </div>
               </div>
@@ -549,13 +555,30 @@ export default function Home() {
               <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-red-900/30 p-8 shadow-glow">
                 <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
                   <Shield className="h-5 w-5 text-red-500 mr-2" />
-                  DLINQNT SHIELD: Advanced Executable Protection
+                  TRIPL3SIXMAFIA CRYPTER: Advanced Protection System
                 </h3>
                 <p className="text-gray-300 mb-4">
-                  DLINQNT SHIELD is a cutting-edge executable protection system designed to make your files completely 
+                  TRIPL3SIXMAFIA CRYPTER is a cutting-edge protection system designed to make your files completely 
                   undetectable to reverse engineering tools and analysis. Our system automatically implements multiple 
-                  layers of sophisticated protection techniques to secure your intellectual property.
+                  layers of sophisticated protection techniques to secure your executable files.
                 </p>
+                
+                <div className="flex items-center p-4 bg-black/50 border border-red-900/30 rounded-lg mb-6">
+                  <div className="flex-1">
+                    <h5 className="text-white font-medium mb-1">Support Development</h5>
+                    <p className="text-xs text-gray-400">If you find this tool useful, consider supporting the developer with a donation</p>
+                  </div>
+                  <Button 
+                    size="sm"
+                    className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500"
+                    onClick={() => window.open('https://www.paypal.com/donate?business=tripl3sixmafia@gmail.com', '_blank')}
+                  >
+                    <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 0 0-.794.68l-.04.22-.63 4.084-.03.114a.804.804 0 0 1-.794.679h-2.776a.483.483 0 0 1-.477-.558l.922-5.832-.02.124a.804.804 0 0 1 .793-.681h1.662a7.132 7.132 0 0 0 7.118-6.161c.26-1.659-.03-2.94-.88-3.877-.037-.042-.072-.085-.108-.127a5.748 5.748 0 0 0-.973-.784c.46.709.697 1.61.602 2.722m-9.709 1.391c.077-.47.154-.94.232-.139a6.089 6.089 0 0 1 2.82-2.208 9.542 9.542 0 0 1 3.105-.471h.365c.196 0 .387.012.574.034a4.551 4.551 0 0 1 1.989.615c-.587-3.26-3.387-4.393-6.917-4.393h-2.79a.804.804 0 0 0-.794.68l-2.85 18.05a.483.483 0 0 0 .477.558h3.12l.781-4.975z"/>
+                    </svg>
+                    Donate
+                  </Button>
+                </div>
                 
                 <h4 className="text-lg font-medium text-white mt-6 mb-3 flex items-center">
                   <Lock className="h-4 w-4 text-red-500 mr-2" />

@@ -25,7 +25,7 @@ export default function Navbar() {
               </div>
               <Link href="/">
                 <span className="font-bold text-xl text-white cursor-pointer">
-                  DLINQNT<span className="text-gradient bg-gradient-to-r from-red-600 to-red-400">SHIELD</span>
+                  TRIPL3SIXMAFIA<span className="text-gradient bg-gradient-to-r from-red-600 to-red-400">CRYPTER</span>
                 </span>
               </Link>
             </div>
@@ -59,8 +59,14 @@ export default function Navbar() {
                 <User className="h-4 w-4 mr-1" /> Log In
               </a>
             </div>
-            <button className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 text-white font-medium py-2 px-4 rounded-lg text-sm transition-all duration-200 shadow-glow-sm hover:shadow-glow-md flex items-center">
-              <Zap className="h-4 w-4 mr-1.5" /> Upgrade to Pro
+            <button 
+              onClick={() => window.open('https://www.paypal.com/donate?business=tripl3sixmafia@gmail.com', '_blank')}
+              className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 text-white font-medium py-2 px-4 rounded-lg text-sm transition-all duration-200 shadow-glow-sm hover:shadow-glow-md flex items-center"
+            >
+              <svg className="w-4 h-4 mr-1.5" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 0 0-.794.68l-.04.22-.63 4.084-.03.114a.804.804 0 0 1-.794.679h-2.776a.483.483 0 0 1-.477-.558l.922-5.832-.02.124a.804.804 0 0 1 .793-.681h1.662a7.132 7.132 0 0 0 7.118-6.161c.26-1.659-.03-2.94-.88-3.877-.037-.042-.072-.085-.108-.127a5.748 5.748 0 0 0-.973-.784c.46.709.697 1.61.602 2.722m-9.709 1.391c.077-.47.154-.94.232-.139a6.089 6.089 0 0 1 2.82-2.208 9.542 9.542 0 0 1 3.105-.471h.365c.196 0 .387.012.574.034a4.551 4.551 0 0 1 1.989.615c-.587-3.26-3.387-4.393-6.917-4.393h-2.79a.804.804 0 0 0-.794.68l-2.85 18.05a.483.483 0 0 0 .477.558h3.12l.781-4.975z"/>
+              </svg>
+              Donate
             </button>
             
             {/* Mobile menu button */}
@@ -101,8 +107,14 @@ export default function Navbar() {
               <User className="h-4 w-4 inline mr-2 text-gray-400" /> Log In
             </a>
             <div className="pt-2">
-              <button className="w-full bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 text-white font-medium py-2.5 px-4 rounded-lg text-base transition-all duration-200 shadow-glow-sm flex items-center justify-center">
-                <Zap className="h-4 w-4 mr-2" /> Upgrade to Pro
+              <button 
+                onClick={() => window.open('https://www.paypal.com/donate?business=tripl3sixmafia@gmail.com', '_blank')}
+                className="w-full bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 text-white font-medium py-2.5 px-4 rounded-lg text-base transition-all duration-200 shadow-glow-sm flex items-center justify-center"
+              >
+                <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="#ffffff" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20.067 8.478c.492.88.556 2.014.3 3.327-.74 3.806-3.276 5.12-6.514 5.12h-.5a.805.805 0 0 0-.794.68l-.04.22-.63 4.084-.03.114a.804.804 0 0 1-.794.679h-2.776a.483.483 0 0 1-.477-.558l.922-5.832-.02.124a.804.804 0 0 1 .793-.681h1.662a7.132 7.132 0 0 0 7.118-6.161c.26-1.659-.03-2.94-.88-3.877-.037-.042-.072-.085-.108-.127a5.748 5.748 0 0 0-.973-.784c.46.709.697 1.61.602 2.722m-9.709 1.391c.077-.47.154-.94.232-.139a6.089 6.089 0 0 1 2.82-2.208 9.542 9.542 0 0 1 3.105-.471h.365c.196 0 .387.012.574.034a4.551 4.551 0 0 1 1.989.615c-.587-3.26-3.387-4.393-6.917-4.393h-2.79a.804.804 0 0 0-.794.68l-2.85 18.05a.483.483 0 0 0 .477.558h3.12l.781-4.975z"/>
+                </svg>
+                Donate with PayPal
               </button>
             </div>
           </div>
