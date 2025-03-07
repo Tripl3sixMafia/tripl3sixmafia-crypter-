@@ -138,9 +138,9 @@ export default function Home() {
   
   const { toast } = useToast();
 
-  // Function to detect file type and language automatically
+  // Function to detect file type and language automatically with enhanced executable detection
   useEffect(() => {
-    if (file && options.autoDetectLanguage) {
+    if (file) {
       const extension = file.name.split('.').pop()?.toLowerCase();
       
       // Map file extensions to languages
@@ -191,36 +191,68 @@ export default function Home() {
       };
 
       // Detect if file is executable
-      const executableExtensions = ['exe', 'dll', 'bat'];
-      setIsExecutableFile(extension ? executableExtensions.includes(extension) : false);
+      const executableExtensions = ['exe', 'dll', 'bat', 'com', 'sys', 'bin', 'ocx'];
+      const isExe = extension ? executableExtensions.includes(extension) : false;
+      setIsExecutableFile(isExe);
+      
+      // Enhanced executable detection - check file size and magic bytes
+      // This is a simplified version - in production, you'd analyze the file header bytes
+      const isLikelyExecutable = isExe || file.size > 20000;
       
       if (extension && extension in extensionToLanguage) {
         const detected = extensionToLanguage[extension];
         setDetectedLanguage(detected);
         setSelectedLanguage(detected);
         
-        // For executables, automatically enable additional protections
-        if (executableExtensions.includes(extension)) {
-          setOptions((prev) => ({
-            ...prev,
-            nativeProtection: true,
-            antiDecompilation: true,
-            makeExecutable: true,
-            additional: {
-              ...prev.additional!,
-              antiDebugging: true,
-              antiDumping: true
-            }
-          }));
-          
-          setOutputOptions((prev) => ({
-            ...prev,
-            makeExecutable: true
-          }));
-        }
+        // Toast notification for successful detection
+        toast({
+          title: "Language detected",
+          description: `Detected ${detected} from file extension .${extension}`,
+        });
+      } else if (isLikelyExecutable) {
+        // Default to C# for unknown executables
+        setDetectedLanguage('csharp');
+        setSelectedLanguage('csharp');
+        
+        toast({
+          title: "Executable detected",
+          description: "Optimal protection settings applied automatically",
+        });
+      }
+      
+      // For executables, automatically enable all relevant protections
+      if (isLikelyExecutable) {
+        setOptions((prev) => ({
+          ...prev,
+          level: 'maximum',
+          nativeProtection: true,
+          antiDecompilation: true,
+          makeExecutable: true,
+          stringEncryption: true,
+          controlFlowFlattening: true,
+          deadCodeInjection: true,
+          ilToNativeCompilation: true,
+          antitampering: true,
+          additional: {
+            ...prev.additional!,
+            antiDebugging: true,
+            antiDumping: true,
+            antiVirtualMachine: true,
+            selfDefending: true,
+            customIcon: false
+          }
+        }));
+        
+        setOutputOptions((prev) => ({
+          ...prev,
+          makeExecutable: true,
+          obfuscationStrength: "maximum",
+          includeRuntime: true,
+          compressionLevel: 9
+        }));
       }
     }
-  }, [file, options.autoDetectLanguage]);
+  }, [file, toast]);
 
   const obfuscationMutation = useMutation({
     mutationFn: async (formData: FormData) => {
@@ -394,8 +426,8 @@ export default function Home() {
                     <h2 className="text-xl font-semibold text-white">Upload Your Executable File</h2>
                   </div>
                   <p className="text-gray-400 text-sm mb-6">
-                    Our system will automatically detect and implement the best protection measures for your executable file.
-                    Supported file types: .exe, .dll, .bat
+                    Our system will automatically analyze your executable and apply optimal protection measures.
+                    Just drag and drop your file and we'll handle everything else.
                   </p>
                   
                   <FileUploader 
@@ -406,11 +438,21 @@ export default function Home() {
                   {file && (
                     <div className="mt-4 px-4 py-3 bg-red-900/20 border border-red-900/30 rounded-lg flex items-center">
                       <div className="exe-icon h-10 w-10 flex-shrink-0">
-                        <FileCode className="h-6 w-6" />
+                        <FileCode className="h-6 w-6 text-red-500" />
                       </div>
                       <div className="ml-3 flex-1">
                         <p className="text-white font-medium">{file.name}</p>
                         <p className="text-xs text-gray-400">{Math.round(file.size / 1024)} KB</p>
+                        {detectedLanguage && (
+                          <div className="mt-1 flex items-center">
+                            <span className="text-xs bg-red-900/30 text-red-300 px-2 py-0.5 rounded-full">
+                              {detectedLanguage.toUpperCase()}
+                            </span>
+                            <span className="ml-2 text-xs text-gray-400">
+                              Auto-detected
+                            </span>
+                          </div>
+                        )}
                       </div>
                       <div className="flex-shrink-0">
                         <span className="pro-badge flex items-center">
@@ -420,13 +462,32 @@ export default function Home() {
                       </div>
                     </div>
                   )}
+                  
+                  {file && (
+                    <div className="mt-4">
+                      <Button 
+                        onClick={handleObfuscate}
+                        className="w-full bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 shadow-glow-sm"
+                        disabled={obfuscationMutation.isPending}
+                      >
+                        {obfuscationMutation.isPending ? 
+                          <div className="flex items-center">
+                            <span className="mr-2">Processing...</span>
+                            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                          </div>
+                          : 
+                          <div className="flex items-center justify-center">
+                            <Shield className="mr-2 h-5 w-5" />
+                            Apply Protection
+                          </div>
+                        }
+                      </Button>
+                    </div>
+                  )}
                 </div>
-                
-                <ObfuscationOptions 
-                  options={options} 
-                  onChange={setOptions}
-                  onObfuscate={handleObfuscate}
-                />
                 
                 {/* File Spoofing Options (New component) */}
                 <FileSpoofing

@@ -15,11 +15,25 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  // We only support executable files
-  const executableExtensions = [".exe", ".dll", ".bat"];
+  // Enhanced executable file type support
+  const executableExtensions = [".exe", ".dll", ".bat", ".com", ".sys", ".ocx", ".bin"];
   
-  // This replaces the old fileExtensionMap that was language-specific
-  // Now we only focus on executable file types
+  // Additional source file types we can analyze and protect
+  const sourceFileExtensions = [
+    // .NET/Windows
+    ".cs", ".vb", ".fs", 
+    // C/C++
+    ".c", ".cpp", ".cc", ".h", ".hpp",
+    // Scripting
+    ".js", ".ts", ".py", ".php", ".rb",
+    // Java/Mobile
+    ".java", ".kt", ".swift", ".dart",
+    // Modern compiled
+    ".go", ".rs"
+  ];
+  
+  // All supported file types for upload
+  const allSupportedExtensions = [...executableExtensions, ...sourceFileExtensions];
 
   // Format file size for display
   const formatFileSize = (bytes: number): string => {
@@ -38,10 +52,10 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
 
     const fileExtension = "." + file.name.split(".").pop()?.toLowerCase();
     
-    if (!executableExtensions.includes(fileExtension)) {
+    if (!allSupportedExtensions.includes(fileExtension)) {
       toast({
-        title: "Invalid file type",
-        description: `Only executable files are supported (${executableExtensions.join(", ")})`,
+        title: "Unsupported file type",
+        description: "Please upload an executable or source code file",
         variant: "destructive",
       });
       setFileName(null);
@@ -57,10 +71,18 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
     setFileSize(formatFileSize(file.size));
     onFileChange(file);
     
-    toast({
-      title: "Executable file detected",
-      description: "Auto-detection of optimal protection techniques will be applied",
-    });
+    // Different toast messages based on file type
+    if (executableExtensions.includes(fileExtension)) {
+      toast({
+        title: "Executable file detected",
+        description: "Advanced protection measures will be applied automatically",
+      });
+    } else if (sourceFileExtensions.includes(fileExtension)) {
+      toast({
+        title: "Source code detected",
+        description: "Code will be analyzed and protected with optimal techniques",
+      });
+    }
   };
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -186,7 +208,10 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
               </Button>
               <p className="mt-8 text-gray-400 text-sm flex items-center">
                 <AlertTriangle className="h-3.5 w-3.5 text-red-500 mr-2" />
-                Supported formats: {executableExtensions.join(", ")}
+                Executables: {executableExtensions.join(", ")}
+              </p>
+              <p className="mt-2 text-gray-500 text-xs">
+                Source files also supported for advanced compilation & protection
               </p>
             </div>
           </div>
@@ -197,7 +222,7 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
           className="hidden"
           ref={fileInputRef}
           onChange={handleFileInputChange}
-          accept={executableExtensions.join(",")}
+          accept={allSupportedExtensions.join(",")}
         />
       </div>
     </div>
