@@ -12,17 +12,36 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { 
-  SupportedLanguage, 
-  ObfuscationOptions as SchemaOptions, 
-  AdditionalProtections,
-  OutputOptions 
-} from "../../shared/interfaces";
+// Define all interfaces locally to avoid import issues
+export type SupportedLanguage = 'javascript' | 'python' | 'java' | 'php' | 'csharp' | 'vbnet' | 'fsharp' | 'powershell' | 'batch' | 'assembly';
+export type FileType = 'js' | 'py' | 'java' | 'php' | 'cs' | 'vb' | 'fs' | 'ps1' | 'bat' | 'exe' | 'dll' | 'asm';
+export type ObfuscationLevel = 'light' | 'medium' | 'heavy' | 'custom' | 'maximum';
+
+export interface AdditionalProtections {
+  antiDebugging: boolean;
+  antiDumping: boolean;
+  antiVirtualMachine: boolean;
+  selfDefending: boolean;
+  watermarking: boolean;
+  licenseSystem: boolean;
+  dllInjection: boolean;
+  domainLock: string[];
+  customIcon: boolean;
+  expirationDate?: string;
+  encryptionKey?: string;
+}
+
+export interface OutputOptions {
+  makeExecutable: boolean;
+  targetPlatform: string;
+  obfuscationStrength: string;
+  includeRuntime: boolean;
+  compressionLevel: number;
+  hiddenConsole: boolean;
+}
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Lock, FileCode, Zap, AlertTriangle } from "lucide-react";
-
-export type ObfuscationLevel = 'light' | 'medium' | 'heavy' | 'custom' | 'maximum';
 
 export interface ObfuscationOptions {
   level: ObfuscationLevel;
