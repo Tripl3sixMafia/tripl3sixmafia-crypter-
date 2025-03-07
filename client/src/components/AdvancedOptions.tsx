@@ -1,5 +1,5 @@
 import React from "react";
-import type { ObfuscationOptions, OutputOptions, AdditionalProtections } from "../../shared/interfaces";
+import type { ObfuscationOptions, OutputOptions, AdditionalProtections } from "@shared/interfaces";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
@@ -67,22 +67,22 @@ export default function AdvancedOptions({
       </h2>
 
       <Tabs defaultValue="code-protection" className="w-full">
-        <TabsList className="grid grid-cols-3 mb-6 bg-black/50 border border-red-900/30">
-          <TabsTrigger value="code-protection" className="rounded-lg data-[state=active]:bg-red-900/40 data-[state=active]:text-white">
-            <FileCode className="h-4 w-4 mr-2" />
+        <TabsList className="flex flex-col mb-6 bg-black/50 border border-red-900/30 w-64 float-left mr-6">
+          <TabsTrigger value="code-protection" className="justify-start rounded-lg data-[state=active]:bg-red-900/40 data-[state=active]:text-white">
+            <FileCode className="h-5 w-5 mr-3" />
             Code Protection
           </TabsTrigger>
-          <TabsTrigger value="anti-analysis" className="rounded-lg data-[state=active]:bg-red-900/40 data-[state=active]:text-white">
-            <Shield className="h-4 w-4 mr-2" />
+          <TabsTrigger value="anti-analysis" className="justify-start rounded-lg data-[state=active]:bg-red-900/40 data-[state=active]:text-white">
+            <Shield className="h-5 w-5 mr-3" />
             Anti-Analysis
           </TabsTrigger>
-          <TabsTrigger value="output-options" className="rounded-lg data-[state=active]:bg-red-900/40 data-[state=active]:text-white">
-            <Zap className="h-4 w-4 mr-2" />
+          <TabsTrigger value="output-options" className="justify-start rounded-lg data-[state=active]:bg-red-900/40 data-[state=active]:text-white">
+            <Zap className="h-5 w-5 mr-3" />
             Output Options
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="code-protection" className="p-4 bg-black/50 rounded-xl border border-red-900/30">
+        <TabsContent value="code-protection" className="ml-64 p-4 bg-black/50 rounded-xl border border-red-900/30">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card className="bg-black/60 border-red-900/20">
               <CardHeader>
@@ -180,7 +180,7 @@ export default function AdvancedOptions({
           </div>
         </TabsContent>
 
-        <TabsContent value="anti-analysis" className="p-4 bg-black/50 rounded-xl border border-red-900/30">
+        <TabsContent value="anti-analysis" className="ml-64 p-4 bg-black/50 rounded-xl border border-red-900/30">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card className="bg-black/60 border-red-900/20">
               <CardHeader>
@@ -278,7 +278,7 @@ export default function AdvancedOptions({
           </div>
         </TabsContent>
 
-        <TabsContent value="output-options" className="p-4 bg-black/50 rounded-xl border border-red-900/30">
+        <TabsContent value="output-options" className="ml-64 p-4 bg-black/50 rounded-xl border border-red-900/30">
           <div className="grid grid-cols-1 gap-6">
             <Card className="bg-black/60 border-red-900/20">
               <CardHeader>
