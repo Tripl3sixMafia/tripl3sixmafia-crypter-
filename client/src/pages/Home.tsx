@@ -366,45 +366,119 @@ export default function Home() {
             )}
             
             {activeTab === "recent" && (
-              <div className="bg-gray-800 rounded-lg p-8 text-center">
-                <div className="text-4xl text-gray-500 mb-4">
-                  <i className="fas fa-history"></i>
+              <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-red-900/30 p-8 shadow-glow text-center">
+                <div className="p-4 inline-block bg-red-900/10 rounded-full border border-red-900/20 mb-6">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                  </svg>
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-3">Recent Obfuscation Jobs</h3>
-                <p className="text-gray-400">
-                  You don't have any recent obfuscation jobs.
-                  <br />Try obfuscating a file first!
+                <h3 className="text-xl font-semibold text-white mb-3">Recent Protection Jobs</h3>
+                <p className="text-gray-400 mb-6">
+                  You don't have any recent protection jobs.
+                  <br />Try protecting an executable file first!
                 </p>
+                <div className="flex flex-col md:flex-row gap-4 justify-center">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setActiveTab("upload")}
+                    className="border-red-900/30 hover:border-red-700/50 bg-transparent text-red-400"
+                  >
+                    Upload an Executable
+                  </Button>
+                  <Button className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 shadow-glow-sm">
+                    Upgrade to Pro
+                  </Button>
+                </div>
               </div>
             )}
             
             {activeTab === "learn" && (
-              <div className="bg-gray-800 rounded-lg p-8">
-                <h3 className="text-xl font-semibold text-white mb-4">What is Code Obfuscation?</h3>
+              <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-red-900/30 p-8 shadow-glow">
+                <h3 className="text-xl font-semibold text-white mb-4 flex items-center">
+                  <Shield className="h-5 w-5 text-red-500 mr-2" />
+                  DLINQNT SHIELD: Advanced Executable Protection
+                </h3>
                 <p className="text-gray-300 mb-4">
-                  Code obfuscation is the process of deliberately making your source code difficult to understand
-                  while preserving its functionality. It's a crucial technique for protecting proprietary algorithms,
-                  preventing reverse engineering, and securing your intellectual property.
+                  DLINQNT SHIELD is a cutting-edge executable protection system designed to make your files completely 
+                  undetectable to reverse engineering tools and analysis. Our system automatically implements multiple 
+                  layers of sophisticated protection techniques to secure your intellectual property.
                 </p>
                 
-                <h4 className="text-lg font-medium text-white mt-6 mb-3">Why Obfuscate Your Code?</h4>
-                <ul className="list-disc list-inside text-gray-300 space-y-2">
-                  <li>Protect proprietary algorithms and business logic</li>
-                  <li>Prevent unauthorized access to your source code</li>
-                  <li>Make reverse engineering significantly more difficult</li>
-                  <li>Add an extra layer of security to your applications</li>
-                  <li>Comply with security requirements in enterprise environments</li>
+                <h4 className="text-lg font-medium text-white mt-6 mb-3 flex items-center">
+                  <Lock className="h-4 w-4 text-red-500 mr-2" />
+                  Protection Technologies
+                </h4>
+                <ul className="space-y-3 text-gray-300">
+                  <li className="flex items-start">
+                    <div className="bg-red-900/20 p-1 rounded mr-3 mt-0.5">
+                      <Shield className="h-4 w-4 text-red-500" />
+                    </div>
+                    <div>
+                      <span className="font-medium text-white">Native Code Protection</span>
+                      <p className="text-sm text-gray-400 mt-1">Converts managed code into native machine code that is extremely difficult to reverse engineer.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="bg-red-900/20 p-1 rounded mr-3 mt-0.5">
+                      <AlertTriangle className="h-4 w-4 text-red-500" />
+                    </div>
+                    <div>
+                      <span className="font-medium text-white">Anti-Debugging Mechanisms</span>
+                      <p className="text-sm text-gray-400 mt-1">Prevents debugging tools from analyzing your executable at runtime.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="bg-red-900/20 p-1 rounded mr-3 mt-0.5">
+                      <FileCode className="h-4 w-4 text-red-500" />
+                    </div>
+                    <div>
+                      <span className="font-medium text-white">String Encryption</span>
+                      <p className="text-sm text-gray-400 mt-1">Encrypts all strings in your executable to hide sensitive information and internal logic.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start">
+                    <div className="bg-red-900/20 p-1 rounded mr-3 mt-0.5">
+                      <Zap className="h-4 w-4 text-red-500" />
+                    </div>
+                    <div>
+                      <span className="font-medium text-white">Anti-Tampering</span>
+                      <p className="text-sm text-gray-400 mt-1">Ensures your executable can detect and respond to any modification attempts.</p>
+                    </div>
+                  </li>
                 </ul>
                 
-                <div className="mt-8 p-4 bg-gray-700 rounded-lg">
-                  <h4 className="text-lg font-medium text-white mb-2">
-                    <i className="fas fa-lightbulb text-yellow-400 mr-2"></i>
-                    Pro Tip
-                  </h4>
-                  <p className="text-gray-300">
-                    For maximum protection, combine code obfuscation with other security measures like 
-                    encryption, code signing, and regular security audits.
+                <div className="mt-8 p-5 bg-red-900/20 border border-red-900/30 rounded-lg">
+                  <div className="flex items-center mb-2">
+                    <span className="pro-badge flex items-center mr-3">PRO</span>
+                    <h4 className="text-lg font-medium text-white">Pro Features</h4>
+                  </div>
+                  <p className="text-gray-300 mb-3">
+                    Upgrade to Pro to access additional advanced protection features:
                   </p>
+                  <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <li className="text-sm text-white flex items-center">
+                      <div className="h-1.5 w-1.5 bg-red-500 rounded-full mr-2"></div>
+                      File Disassembly
+                    </li>
+                    <li className="text-sm text-white flex items-center">
+                      <div className="h-1.5 w-1.5 bg-red-500 rounded-full mr-2"></div>
+                      Manual String Crypting
+                    </li>
+                    <li className="text-sm text-white flex items-center">
+                      <div className="h-1.5 w-1.5 bg-red-500 rounded-full mr-2"></div>
+                      Custom Library Injection
+                    </li>
+                    <li className="text-sm text-white flex items-center">
+                      <div className="h-1.5 w-1.5 bg-red-500 rounded-full mr-2"></div>
+                      Advanced Analysis Reports
+                    </li>
+                  </ul>
+                  <div className="mt-4">
+                    <Button className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 shadow-glow-sm">
+                      Upgrade to Pro
+                    </Button>
+                  </div>
                 </div>
               </div>
             )}

@@ -1,9 +1,10 @@
 import React, { useState, useRef } from "react";
-import { SupportedLanguage } from "@/pages/Home";
 import { useToast } from "@/hooks/use-toast";
+import { FileCode, Shield, AlertTriangle, Zap } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface FileUploaderProps {
-  selectedLanguage: SupportedLanguage;
+  selectedLanguage: string;
   onFileChange: (file: File | null) => void;
 }
 
@@ -14,13 +15,8 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  const fileExtensionMap: Record<SupportedLanguage, string[]> = {
-    javascript: [".js", ".jsx", ".ts", ".tsx"],
-    python: [".py", ".pyw"],
-    java: [".java"],
-    php: [".php"],
-    csharp: [".cs"],
-  };
+  // We only support executable files
+  const executableExtensions = [".exe", ".dll", ".bat"];
 
   // Format file size for display
   const formatFileSize = (bytes: number): string => {
@@ -38,12 +34,11 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
     }
 
     const fileExtension = "." + file.name.split(".").pop()?.toLowerCase();
-    const validExtensions = fileExtensionMap[selectedLanguage];
     
-    if (!validExtensions.includes(fileExtension)) {
+    if (!executableExtensions.includes(fileExtension)) {
       toast({
         title: "Invalid file type",
-        description: `Please upload a ${selectedLanguage} file (${validExtensions.join(", ")})`,
+        description: `Only executable files are supported (${executableExtensions.join(", ")})`,
         variant: "destructive",
       });
       setFileName(null);
@@ -58,6 +53,11 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
     setFileName(file.name);
     setFileSize(formatFileSize(file.size));
     onFileChange(file);
+    
+    toast({
+      title: "Executable file detected",
+      description: "Auto-detection of optimal protection techniques will be applied",
+    });
   };
 
   const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,34 +95,15 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
     }
   };
 
-  // Get icon based on file extension
-  const getFileIcon = (): string => {
-    if (!fileName) return "fas fa-file-upload";
-    
-    const extension = fileName.split('.').pop()?.toLowerCase();
-    
-    if (extension === 'js' || extension === 'jsx' || extension === 'ts' || extension === 'tsx') return "fab fa-js";
-    if (extension === 'py' || extension === 'pyw') return "fab fa-python";
-    if (extension === 'java') return "fab fa-java";
-    if (extension === 'php') return "fab fa-php";
-    if (extension === 'cs') return "fas fa-hashtag";
-    
-    return "fas fa-file-code";
-  };
-
   return (
     <div className="mb-8">
-      <h2 className="text-2xl font-bold text-white mb-5 flex items-center">
-        <i className="fas fa-file-code text-gradient bg-gradient-to-r from-purple-400 to-pink-500 mr-3"></i>
-        Upload Your Code
-      </h2>
       <div 
         className={`relative ${
           isDragging 
-            ? "bg-gray-800/40 backdrop-blur-sm border-2 border-dashed border-purple-500 shadow-lg" 
+            ? "bg-black/40 backdrop-blur-sm border-2 border-dashed border-red-600 shadow-lg" 
             : fileName 
-              ? "bg-gray-800/60 backdrop-blur-sm border border-gray-700/80 shadow-md" 
-              : "bg-gray-800/40 backdrop-blur-sm border-2 border-dashed border-gray-600 hover:border-purple-500/60 shadow-md hover:shadow-lg"
+              ? "bg-black/40 backdrop-blur-sm border border-red-900/30 shadow-md" 
+              : "bg-black/40 backdrop-blur-sm border-2 border-dashed border-red-900/30 hover:border-red-600/50 shadow-md hover:shadow-lg"
         } rounded-xl transition-all duration-300`}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}
@@ -131,26 +112,30 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
       >
         {/* Border gradient animation when dragging */}
         {isDragging && (
-          <div className="absolute inset-0 rounded-xl bg-purple-500/10 animate-pulse pointer-events-none"></div>
+          <div className="absolute inset-0 rounded-xl bg-red-600/10 animate-pulse pointer-events-none"></div>
         )}
         
         {fileName ? (
-          <div className="p-8">
+          <div className="p-6">
             <div className="flex flex-col md:flex-row md:items-center">
-              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-gray-800 to-gray-900 border border-gray-700/50 flex items-center justify-center mb-4 md:mb-0 md:mr-6 shadow-glow">
-                <i className={`${getFileIcon()} text-3xl text-gradient bg-gradient-to-r from-purple-400 to-pink-500`}></i>
+              <div className="exe-icon w-16 h-16 rounded-xl flex items-center justify-center mb-4 md:mb-0 md:mr-6">
+                <FileCode className="h-8 w-8 text-red-500" />
               </div>
               <div className="flex-1 mb-4 md:mb-0">
                 <h3 className="text-lg font-semibold text-white mb-2 truncate max-w-md">{fileName}</h3>
                 <div className="flex items-center">
-                  <span className="text-sm text-gray-400 bg-gray-800/60 px-3 py-1 rounded-full">{fileSize}</span>
+                  <span className="text-sm text-gray-400 bg-black/60 px-3 py-1 rounded-full">{fileSize}</span>
                   <span className="mx-2 text-gray-600">•</span>
-                  <span className="text-sm text-gradient bg-gradient-to-r from-purple-400 to-pink-400 font-medium">{selectedLanguage}</span>
+                  <span className="pro-badge flex items-center text-xs">
+                    <Zap className="h-3 w-3 mr-1" />
+                    AUTO-PROTECT
+                  </span>
                 </div>
               </div>
               <div className="flex space-x-3">
-                <button 
-                  className="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-all duration-200 border border-gray-700 hover:border-gray-600"
+                <Button 
+                  variant="outline"
+                  className="border-red-900/30 hover:border-red-700/50 bg-transparent text-white"
                   onClick={() => {
                     setFileName(null);
                     setFileSize(null);
@@ -160,44 +145,45 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
                     }
                   }}
                 >
-                  <i className="fas fa-trash-alt mr-2"></i> Remove
-                </button>
-                <button 
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-4 py-2 rounded-lg text-sm transition-all duration-200 shadow-md hover:shadow-lg"
+                  Remove
+                </Button>
+                <Button 
+                  className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 shadow-glow-sm"
                   onClick={() => {
                     if (fileInputRef.current) {
                       fileInputRef.current.click();
                     }
                   }}
                 >
-                  <i className="fas fa-exchange-alt mr-2"></i> Change
-                </button>
+                  Change
+                </Button>
               </div>
             </div>
           </div>
         ) : (
           <div className="p-12 text-center">
             <div className="flex flex-col items-center justify-center">
-              <div className="w-24 h-24 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl flex items-center justify-center mb-8 border border-gray-700/50 shadow-glow float-animation">
-                <i className="fas fa-cloud-upload-alt text-4xl text-gradient bg-gradient-to-r from-purple-400 to-pink-500"></i>
+              <div className="w-24 h-24 exe-icon rounded-2xl flex items-center justify-center mb-8 shadow-glow float-animation">
+                <Shield className="h-10 w-10 text-red-500" />
               </div>
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-4">Drag & Drop Your Code</h3>
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-4">Upload Your Executable</h3>
               <p className="text-gray-300 mb-8 max-w-md">
-                Upload your {selectedLanguage} source code to obfuscate and protect it from reverse engineering
+                Drop your executable file here for automatic protection. Our system will implement
+                the most effective security measures to shield your file from reverse engineering.
               </p>
-              <button
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium py-3 px-8 rounded-lg text-sm shadow-glow transition-all duration-200"
+              <Button
+                className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 shadow-glow py-6 px-8"
                 onClick={() => {
                   if (fileInputRef.current) {
                     fileInputRef.current.click();
                   }
                 }}
               >
-                <i className="fas fa-file-upload mr-2"></i> Browse Files
-              </button>
-              <p className="mt-8 text-gray-500 text-sm flex items-center">
-                <i className="fas fa-info-circle mr-2 text-purple-500"></i>
-                Supported formats: {fileExtensionMap[selectedLanguage].join(", ")}
+                Browse Files
+              </Button>
+              <p className="mt-8 text-gray-400 text-sm flex items-center">
+                <AlertTriangle className="h-3.5 w-3.5 text-red-500 mr-2" />
+                Supported formats: {executableExtensions.join(", ")}
               </p>
             </div>
           </div>
@@ -208,7 +194,7 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
           className="hidden"
           ref={fileInputRef}
           onChange={handleFileInputChange}
-          accept={fileExtensionMap[selectedLanguage].join(",")}
+          accept={executableExtensions.join(",")}
         />
       </div>
     </div>
