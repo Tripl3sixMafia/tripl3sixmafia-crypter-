@@ -12,12 +12,12 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useLocation } from "wouter";
 import { 
   SupportedLanguage, 
-  ObfuscationOptions as SchemaOptions, 
   AdditionalProtections,
   OutputOptions 
-} from "../../shared/interfaces";
+} from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Shield, Lock, FileCode, Zap, AlertTriangle } from "lucide-react";
@@ -107,7 +107,27 @@ export default function Home() {
   const [result, setResult] = useState<ObfuscationResult | null>(null);
   const [detectedLanguage, setDetectedLanguage] = useState<SupportedLanguage | null>(null);
   const [isExecutableFile, setIsExecutableFile] = useState<boolean>(false);
+  const [isPremiumUser, setIsPremiumUser] = useState<boolean>(false);
+  const [, setLocation] = useLocation();
   const { toast } = useToast();
+  
+  // Check user's premium status when component mounts
+  useEffect(() => {
+    const checkPremiumStatus = async () => {
+      try {
+        const response = await apiRequest("/api/check-premium", {
+          method: "GET"
+        });
+        const data = await response.json();
+        setIsPremiumUser(data.isPremium || false);
+      } catch (error) {
+        console.error("Failed to check premium status:", error);
+        setIsPremiumUser(false);
+      }
+    };
+    
+    checkPremiumStatus();
+  }, []);
 
   // Function to detect file type and language automatically
   useEffect(() => {
@@ -167,7 +187,10 @@ export default function Home() {
 
   const obfuscationMutation = useMutation({
     mutationFn: async (formData: FormData) => {
-      const response = await apiRequest("POST", "/api/obfuscate", formData);
+      const response = await apiRequest("/api/obfuscate", {
+        method: "POST",
+        body: formData
+      });
       return response.json();
     },
     onSuccess: (data: ObfuscationResult) => {
@@ -345,15 +368,35 @@ export default function Home() {
                   onObfuscate={handleObfuscate}
                 />
                 
-                {/* Advanced Options */}
-                <AdvancedOptions 
-                  options={options}
-                  outputOptions={outputOptions}
-                  onChangeOptions={setOptions}
-                  onChangeOutputOptions={setOutputOptions}
-                  isExecutableFile={isExecutableFile}
-                  onIconSelect={handleIconChange}
-                />
+                {/* Advanced Options - Only for Premium users */}
+                {isPremiumUser ? (
+                  <AdvancedOptions 
+                    options={options}
+                    outputOptions={outputOptions}
+                    onChangeOptions={setOptions}
+                    onChangeOutputOptions={setOutputOptions}
+                    isExecutableFile={isExecutableFile}
+                    onIconSelect={handleIconChange}
+                  />
+                ) : (
+                  <div className="bg-black/40 backdrop-blur-sm rounded-xl border border-red-900/30 p-6 mb-8 shadow-glow">
+                    <div className="flex items-center mb-4">
+                      <Lock className="h-5 w-5 text-red-500 mr-2" />
+                      <h2 className="text-xl font-semibold text-white">Premium Features Locked</h2>
+                    </div>
+                    <p className="text-gray-400 text-sm mb-6">
+                      Advanced protection features are only available to premium users. 
+                      Upgrade your account to access file disassembly, custom library injection,
+                      and advanced obfuscation techniques.
+                    </p>
+                    <Button 
+                      onClick={() => setLocation('/premium')}
+                      className="w-full bg-gradient-to-r from-red-700 to-red-500 hover:from-red-600 hover:to-red-400 text-white shadow-lg shadow-red-700/30"
+                    >
+                      Upgrade to Premium
+                    </Button>
+                  </div>
+                )}
                 
                 {obfuscationMutation.isPending && (
                   <ProcessingState />
@@ -386,7 +429,10 @@ export default function Home() {
                   >
                     Upload an Executable
                   </Button>
-                  <Button className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 shadow-glow-sm">
+                  <Button 
+                    onClick={() => setLocation('/premium')}
+                    className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 shadow-glow-sm"
+                  >
                     Upgrade to Pro
                   </Button>
                 </div>
@@ -475,7 +521,10 @@ export default function Home() {
                     </li>
                   </ul>
                   <div className="mt-4">
-                    <Button className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 shadow-glow-sm">
+                    <Button 
+                      onClick={() => setLocation('/premium')}
+                      className="bg-gradient-to-r from-red-800 to-red-600 hover:from-red-700 hover:to-red-500 shadow-glow-sm"
+                    >
                       Upgrade to Pro
                     </Button>
                   </div>

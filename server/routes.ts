@@ -309,7 +309,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(401).json({ message: "Invalid admin code" });
       }
       
-      // Grant admin premium access
+      // Grant admin premium access by setting a session variable
+      req.session.isPremium = true;
+      req.session.isAdmin = true;
+      
       return res.status(200).json({ 
         success: true,
         message: "Admin access granted"
@@ -318,6 +321,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error('Admin access error:', error);
       return res.status(500).json({ 
         message: error instanceof Error ? error.message : "Internal server error" 
+      });
+    }
+  });
+  
+  // Check Premium Status
+  app.get('/api/check-premium', async (req, res) => {
+    try {
+      // Check if user is premium from session
+      const isPremium = req.session.isPremium || false;
+      
+      return res.status(200).json({ 
+        isPremium,
+        isAdmin: req.session.isAdmin || false
+      });
+    } catch (error) {
+      console.error('Premium status check error:', error);
+      return res.status(500).json({ 
+        message: error instanceof Error ? error.message : "Internal server error",
+        isPremium: false
       });
     }
   });
