@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import multer from "multer";
@@ -14,6 +14,16 @@ import { z } from "zod";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
 import * as crypto from 'crypto';
+import fs from 'fs';
+
+// Extend Express Request type to include session
+declare module 'express-session' {
+  interface SessionData {
+    isPremium?: boolean;
+    isAdmin?: boolean;
+    userId?: number;
+  }
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Configure multer for memory storage
@@ -49,6 +59,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
           });
         }
         throw error;
+      }
+      
+      // Check if user has premium status
+      const isPremium = req.session.isPremium || false;
+      
+      // If not premium, restrict options to basic/medium level obfuscation
+      if (!isPremium) {
+        // Restrict maximum protection level to medium
+        if (options.level === 'maximum' || options.level === 'heavy') {
+          options.level = 'medium';
+        }
+        
+        // Disable premium features
+        options.nativeProtection = false;
+        options.resourceEncryption = false;
+        options.ilToNativeCompilation = false;
+        options.antiDecompilation = false;
+        options.antitampering = false;
+        
+        // Remove any advanced additional protections
+        if (options.additional) {
+          options.additional.antiVirtualMachine = false;
+          options.additional.licenseSystem = false;
+          options.additional.dllInjection = false;
+          options.additional.customIcon = false;
+        }
       }
       
       // Get code from file
@@ -197,7 +233,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(403).json({ message: "Please verify your email before logging in" });
       }
       
-      // Set up session (in a real app, we would use JWT or session cookies)
+      // Set up session
+      req.session.userId = user.id;
+      req.session.isPremium = user.isPremium === true;
+      
       return res.status(200).json({ 
         userId: user.id,
         email: user.email,
@@ -283,6 +322,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Generate a license key
       const licenseKey = await storage.createLicenseKey(userId, transactionId);
+      
+      // Set premium status in user account
+      await storage.updateUserPremium(userId, true);
+      
+      // Set premium status in session if user is currently logged in
+      req.session.userId = userId;
+      req.session.isPremium = true;
       
       // In a real app, we would send the license key to the user's email
       // For demo purposes, we'll just return it
