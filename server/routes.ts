@@ -284,25 +284,45 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get('/api/download/:token', (req, res) => {
     const { token } = req.params;
     
+    console.log(`Download requested for token: ${token}`);
+    
     // Check if token exists
     if (!downloadMap.has(token)) {
+      console.log(`Token not found in downloadMap: ${token}`);
       return res.status(404).json({ message: "Download not found or expired" });
     }
     
     const download = downloadMap.get(token)!;
+    console.log(`Found download: ${download.filename} at ${download.path}`);
     
     // Check if file exists
     if (!fs.existsSync(download.path)) {
+      console.log(`File not found at path: ${download.path}`);
       downloadMap.delete(token);
       return res.status(404).json({ message: "File not found" });
     }
     
+    // Calculate file size
+    const stats = fs.statSync(download.path);
+    const fileSizeInBytes = stats.size;
+    console.log(`File size: ${fileSizeInBytes} bytes`);
+    
     // Set appropriate headers
     res.setHeader('Content-Disposition', `attachment; filename="${download.filename}"`);
     res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Length', fileSizeInBytes);
+    
+    // Add gangster security header for branding
+    res.setHeader('X-TRIPL3SIXMAFIA-Protection', 'Maximum Security');
     
     // Stream the file to the client
     const fileStream = fs.createReadStream(download.path);
+    fileStream.on('error', (error) => {
+      console.error(`Error streaming file: ${download.path}`, error);
+      res.status(500).json({ message: "Error downloading file" });
+    });
+    
+    console.log(`Streaming protected file to client: ${download.filename}`);
     fileStream.pipe(res);
   });
   

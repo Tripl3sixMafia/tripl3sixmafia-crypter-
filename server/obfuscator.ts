@@ -1004,30 +1004,74 @@ export async function obfuscateCode(
     // Use the file size from fileInfo
     originalSize = options.fileInfo.size;
     
-    // For binary files, we'll store path reference in obfuscatedCode
-    // In a real implementation, you'd apply actual binary obfuscation here
-    obfuscatedCode = `BINARY_FILE_REFERENCE:${code}`;
+    // Generate a unique filename for our protected binary
+    const timestamp = Date.now();
+    const randomHash = crypto.createHash('md5').update(code + timestamp).digest('hex').substring(0, 8);
+    const fileName = path.basename(code);
+    const fileNameWithoutExt = path.basename(fileName, path.extname(fileName));
+    const protectedFilename = `protected_${fileNameWithoutExt}_${randomHash}${path.extname(fileName)}`;
+    const protectedPath = path.join(executablesDir, protectedFilename);
+    
+    console.log(`Processing binary file: ${options.fileInfo.originalName} (${options.fileInfo.size} bytes)`);
     
     // Set output type based on file extension
     const ext = options.fileInfo.extension.toLowerCase();
     outputType = ext.replace('.', '');
     
-    // Handle binary obfuscation and protection - this would be implemented with actual binary manipulation tools
-    console.log(`Applied binary protection to ${options.fileInfo.originalName}`);
+    // Read the binary file
+    const binaryData = fs.readFileSync(code);
     
-    // For this prototype, we'll copy the binary file to a new location with "protected_" prefix
-    const fileName = path.basename(code);
-    const protectedPath = path.join(tempDir, `protected_${fileName}`);
-    fs.copyFileSync(code, protectedPath);
+    // For storing the binary file path reference
+    obfuscatedCode = `TRIPL3SIXMAFIA_PROTECTED_BINARY:${protectedFilename}`;
+    
+    // Apply protections to the binary file
+    // For actual binary transformation, more sophisticated tools would be used here
+    
+    // Generate metadata for the protected file
+    const metadata = Buffer.from(JSON.stringify({
+      protectionLevel: options.level,
+      timestamp: Date.now(),
+      originalFileName: options.fileInfo.originalName,
+      fileSize: options.fileInfo.size,
+      protectionOptions: {
+        antiDebug: Boolean(options.additional?.antiDebugging),
+        antiVM: Boolean(options.additional?.antiVirtualMachine),
+        antiDump: Boolean(options.additional?.antiDumping),
+        selfDefend: Boolean(options.additional?.selfDefending)
+      }
+    }));
+    
+    // Create a new buffer with metadata prepended to the binary data
+    // This simulates adding protection headers to the binary
+    const metadataSize = Buffer.alloc(4);
+    metadataSize.writeUInt32LE(metadata.length, 0);
+    
+    // Create the protected binary: [SIGNATURE][METADATA_SIZE][METADATA][ORIGINAL_BINARY_DATA]
+    const signature = Buffer.from('3SIXMAFIA'); // 9 bytes signature
+    const protectedBinary = Buffer.concat([
+      signature, 
+      metadataSize,
+      metadata,
+      binaryData
+    ]);
+    
+    // Write the protected binary to the output file
+    fs.writeFileSync(protectedPath, protectedBinary);
+    console.log(`Protected binary created at ${protectedPath} (${protectedBinary.length} bytes)`);
+    
     executablePath = protectedPath;
     
-    // Apply advanced protections to the binary
+    // Apply additional protection layers (simulated)
     if (options.additional) {
       console.log("Applying advanced binary protections:");
       if (options.additional.antiDebugging) console.log("- Anti-debugging mechanisms");
       if (options.additional.antiDumping) console.log("- Anti-memory dumping");
       if (options.additional.antiVirtualMachine) console.log("- VM detection and evasion");
-      // More protections would be applied here
+      
+      // In a real implementation, these would modify the binary further
+      obfuscatedSize = protectedBinary.length;
+    } else {
+      obfuscatedSize = protectedBinary.length;
     }
   } else {
     // For text-based code files, proceed with normal obfuscation
