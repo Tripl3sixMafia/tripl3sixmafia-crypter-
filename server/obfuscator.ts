@@ -189,7 +189,7 @@ function obfuscateJavaScript(code: string, options: ObfuscationOptions): string 
     deadCodeInjection: options.deadCodeInjection,
     deadCodeInjectionThreshold: options.level === 'maximum' ? 0.5 : 0.4,
     debugProtection: options.level === 'heavy' || options.level === 'maximum',
-    debugProtectionInterval: options.level === 'heavy' || options.level === 'maximum' ? true : false,
+    debugProtectionInterval: options.level === 'heavy' || options.level === 'maximum' ? 1000 : 0,
     disableConsoleOutput: options.level === 'heavy' || options.level === 'maximum',
     identifierNamesGenerator: options.level === 'light' ? 'mangled' : 'hexadecimal',
     renameGlobals: options.level === 'heavy' || options.level === 'maximum',
@@ -214,7 +214,11 @@ function obfuscatePython(code: string, options: ObfuscationOptions): string {
   
   // Replace variable names with obscure names
   const varPattern = /([a-zA-Z_][a-zA-Z0-9_]*)\s*=/g;
-  const varMatches = [...code.matchAll(varPattern)];
+  const varMatchArray: RegExpMatchArray[] = [];
+  let varMatch;
+  while ((varMatch = varPattern.exec(code)) !== null) {
+    varMatchArray.push(varMatch);
+  }
   
   // Create a mapping of variable names to obfuscated names
   const varMap: Record<string, string> = {};
@@ -237,7 +241,7 @@ function obfuscatePython(code: string, options: ObfuscationOptions): string {
     }
   };
   
-  varMatches.forEach(match => {
+  varMatchArray.forEach(match => {
     const varName = match[1];
     if (!varMap[varName] && !['self', 'cls', '__init__', 'super', 'print', 'len', 'range'].includes(varName)) {
       varMap[varName] = getVarName();
@@ -257,9 +261,13 @@ function obfuscatePython(code: string, options: ObfuscationOptions): string {
   if (options.stringEncryption) {
     // Find all string literals
     const stringPattern = /(["'])((?:\\\1|(?!\1).)*?)\1/g;
-    const stringMatches = [...obfuscated.matchAll(stringPattern)];
+    const stringMatchArray: RegExpMatchArray[] = [];
+    let stringMatch;
+    while ((stringMatch = stringPattern.exec(obfuscated)) !== null) {
+      stringMatchArray.push(stringMatch);
+    }
     
-    for (const match of stringMatches) {
+    for (const match of stringMatchArray) {
       const fullMatch = match[0];
       const stringContent = match[2];
       const quote = match[1];
@@ -469,9 +477,9 @@ async function makeExecutable(code: string, language: string, options: Obfuscati
     
     return { path: exePath, type: outputType };
     
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating executable:', error);
-    throw new Error(`Failed to create executable: ${error.message}`);
+    throw new Error(`Failed to create executable: ${error?.message || 'Unknown error'}`);
   }
 }
 
