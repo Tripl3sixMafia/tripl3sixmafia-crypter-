@@ -1,8 +1,8 @@
 services:
   - type: web
-    name: tripl3sixmafia-crypter-api
+    name: tripl3sixmafia-crypter
     env: node
-    buildCommand: chmod +x build.sh && ./build.sh
+    buildCommand: npm install && npm run build
     startCommand: node dist/index.js
     region: oregon 
     plan: free
@@ -12,25 +12,4 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 8080
-    autoDeploy: true
-
-  - type: web
-    name: tripl3sixmafia-crypter-static
-    env: static
-    buildCommand: npm install && npm run build
-    staticPublishPath: dist/public
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: VITE_API_URL
-        fromService:
-          name: tripl3sixmafia-crypter-api
-          type: web
-          property: url
     autoDeploy: true
