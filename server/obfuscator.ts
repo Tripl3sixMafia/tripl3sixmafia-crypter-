@@ -1003,6 +1003,7 @@ export async function obfuscateCode(
   let outputType: string | undefined = undefined;
   let executablePath: string | undefined = undefined;
   let downloadUrl: string | undefined = undefined;
+  let binaryFileSize: number | undefined = undefined;
   
   // For binary files, we need special handling
   if (isBinary && options.fileInfo) {
@@ -1077,7 +1078,7 @@ export async function obfuscateCode(
     // Set the obfuscated size to the binary size instead of calculating from the code reference string
     // This will be used later in the function return
     obfuscatedCode = `TRIPL3SIXMAFIA_PROTECTED_BINARY:${protectedFilename}`;
-    const codeSize = protectedBinary.length;
+    binaryFileSize = protectedBinary.length;
   } else {
     // For text-based code files, proceed with normal obfuscation
     originalSize = Buffer.byteLength(code, 'utf8');
@@ -1128,8 +1129,8 @@ export async function obfuscateCode(
   }
   
   // For binary files, we already calculated the size earlier
-  const obfuscatedSize = isBinary && typeof codeSize !== 'undefined' 
-    ? codeSize 
+  const obfuscatedSize = isBinary && typeof binaryFileSize !== 'undefined' 
+    ? binaryFileSize 
     : Buffer.byteLength(obfuscatedCode, 'utf8');
   
   const compressionRatio = calculateCompressionRatio(originalSize, obfuscatedSize);
