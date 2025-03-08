@@ -1646,6 +1646,476 @@ static class AntiTamper
   return obfuscated;
 }
 
+// Advanced batch file obfuscation with undetectable techniques
+function obfuscateBatchFile(code: string, options: ObfuscationOptions): string {
+  // Base banner
+  let obfuscated = `@echo off
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+:: TRIPL3SIXMAFIA CRYPTER - Maximum Protection System
+:: Advanced Batch File Protection v2.0
+::
+:: WARNING: This file has been obfuscated. Any attempt to
+:: reverse engineer, debug, or modify this code will trigger security mechanisms.
+:: 
+:: Protected: ${new Date().toISOString()}
+::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+`;
+
+  // Add self-defense mechanism that destroys the script if tampered with
+  if (options.additional?.selfDefending) {
+    obfuscated += `
+:: Anti-tampering protection system
+setlocal EnableDelayedExpansion
+set "_sig=${crypto.randomBytes(32).toString('hex')}"
+set "_checksum=0"
+for /f "tokens=1,2 delims=:" %%a in ('findstr /n "^" "%~f0"') do (
+  if %%a gtr 20 if %%a lss 100 (
+    set "_line=%%b"
+    set /a "_checksum+=!_line:~1,1!"
+  )
+)
+if not "!_checksum!" == "1337" (
+  echo Security violation detected. This incident will be reported.
+  ping 127.0.0.1 -n 2 > nul
+  del "%~f0"
+  exit /b 1
+)
+
+:: Anti-debugging protection
+if NOT "%~1"=="" if "%~1"=="-debug" (
+  echo Execution terminated - debugging attempt detected
+  exit /b 1
+)
+
+`;
+  }
+
+  // Advanced anti-VM detection for batch files
+  if (options.additional?.antiVirtualMachine) {
+    obfuscated += `
+:: Anti-VM detection
+wmic computersystem get manufacturer 2>nul | find /i "VIRTUAL" >nul
+if "%ERRORLEVEL%"=="0" goto :VMDetected
+wmic computersystem get manufacturer 2>nul | find /i "VMware" >nul
+if "%ERRORLEVEL%"=="0" goto :VMDetected
+wmic computersystem get model 2>nul | find /i "Virtual" >nul
+if "%ERRORLEVEL%"=="0" goto :VMDetected
+wmic bios get serialnumber 2>nul | find /i "0" >nul
+if "%ERRORLEVEL%"=="0" goto :VMDetected
+reg query "HKLM\\HARDWARE\\DEVICEMAP\\Scsi\\Scsi Port 0\\Scsi Bus 0\\Target Id 0\\Logical Unit Id 0" /v "Identifier" | find /i "vmware" >nul
+if "%ERRORLEVEL%"=="0" goto :VMDetected
+goto :NoVM
+
+:VMDetected
+echo Warning: Virtual environment detected. Execution terminated.
+exit /b 1
+
+:NoVM
+`;
+  }
+
+  // Process environment variables (domain lock)
+  if (options.additional?.domainLock && options.additional.domainLock.length > 0) {
+    obfuscated += `
+:: Domain lock verification
+set "_authorizedDomain=0"
+for /f "tokens=2 delims==" %%a in ('wmic computersystem get domain /value') do (
+  set "_currentDomain=%%a"
+)
+`;
+
+    // Add each domain to the check
+    for (const domain of options.additional.domainLock) {
+      obfuscated += `if /i "!_currentDomain!"=="${domain}" set "_authorizedDomain=1"\n`;
+    }
+
+    obfuscated += `
+if "!_authorizedDomain!"=="0" (
+  echo Unauthorized domain. Execution terminated.
+  exit /b 1
+)
+`;
+  }
+
+  // Handle expiration date
+  if (options.additional?.expirationDate) {
+    const expiryDate = new Date(options.additional.expirationDate);
+    const year = expiryDate.getFullYear();
+    const month = (expiryDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = expiryDate.getDate().toString().padStart(2, '0');
+    
+    obfuscated += `
+:: License expiration check
+for /f "tokens=2 delims==." %%a in ('wmic os get LocalDateTime /value') do set "_dt=%%a"
+set "_currYear=!_dt:~0,4!"
+set "_currMonth=!_dt:~4,2!"
+set "_currDay=!_dt:~6,2!"
+
+set /a "_currDate=(!_currYear! * 10000) + (!_currMonth! * 100) + !_currDay!"
+set /a "_expiryDate=${year} * 10000 + ${month} * 100 + ${day}"
+
+if !_currDate! GTR !_expiryDate! (
+  echo License expired on ${year}-${month}-${day}. Please renew.
+  exit /b 1
+)
+`;
+  }
+
+  // Apply string encryption
+  if (options.stringEncryption) {
+    // Setup the decryption functions
+    obfuscated += `
+:: String decryption engine
+set "_dec="
+setlocal EnableDelayedExpansion
+set "_key=${Math.floor(Math.random() * 255)}"
+
+call :setupDecoder
+goto :skipDecoder
+
+:decode
+set "_input=%~1"
+set "_output="
+for /L %%i in (0,1,%_input:~1,-1%) do (
+  set /a "_char=!_input:~%%i,1! ^ %_key%"
+  for %%j in (!_char!) do set "_output=!_output!%%j"
+)
+( endlocal & set "%~2=%_output%" )
+goto :eof
+
+:setupDecoder
+goto :eof
+
+:skipDecoder
+`;
+
+    // Now let's process the actual batch code with string encryption
+    // Split the code into lines for processing
+    const lines = code.split(/\r?\n/);
+    let processedCode = '';
+    
+    for (let line of lines) {
+      // Skip empty lines or those that are just comments
+      if (line.trim() === '' || line.trim().startsWith('::') || line.trim().startsWith('REM')) {
+        processedCode += line + '\n';
+        continue;
+      }
+      
+      // Replace string literals with encoded versions
+      line = line.replace(/"([^"]*)"/g, (match, content) => {
+        if (content.length === 0) return match;
+        
+        // Convert to obfuscated format using XOR encoding
+        const keyInt = Math.floor(Math.random() * 255);
+        const encoded = Array.from(content).map((c: string) => (c.charCodeAt(0) ^ keyInt).toString(10)).join(',');
+        return `%_dec:${encoded}%`;
+      });
+      
+      processedCode += line + '\n';
+    }
+    
+    obfuscated += processedCode;
+  } else {
+    // If no string encryption, just add the original code
+    obfuscated += code;
+  }
+  
+  // Add batch file cleanup and final execution barriers
+  if (options.level === "maximum" || options.level === "heavy") {
+    obfuscated += `
+
+:: Self-destruction cleanup
+if exist "%TEMP%\\${crypto.randomBytes(8).toString('hex')}.tmp" del /F /Q "%TEMP%\\${crypto.randomBytes(8).toString('hex')}.tmp"
+exit /b 0
+
+:: Security traps below this line - do not modify
+:: ${crypto.randomBytes(32).toString('hex')}
+:: ${crypto.randomBytes(32).toString('hex')}
+`;
+  }
+  
+  return obfuscated;
+}
+
+// PowerShell script obfuscation with advanced techniques
+function obfuscatePowerShell(code: string, options: ObfuscationOptions): string {
+  // Base banner for PowerShell
+  let obfuscated = `<#
+  +----------------------------------------------------+
+  | TRIPL3SIXMAFIA CRYPTER - Maximum Protection System |
+  +----------------------------------------------------+
+  | WARNING: This file has been obfuscated using       |
+  | advanced cryptographic techniques. Any attempt to  |
+  | decompile, reverse engineer, or modify this code   |
+  | will trigger security mechanisms.                  |
+  +----------------------------------------------------+
+  | Unauthorized access and modification are strictly  |
+  | prohibited and may result in legal consequences.   |
+  +----------------------------------------------------+
+  
+  Protected: ${new Date().toISOString()}
+#>
+
+# Security profile initialization
+Set-StrictMode -Version Latest
+$ErrorActionPreference = "SilentlyContinue"
+$WarningPreference = "SilentlyContinue"
+$script:ExecutionStartTime = Get-Date
+`;
+
+  // Add security checks for PowerShell scripts
+  if (options.additional?.antiDebugging) {
+    obfuscated += `
+# Anti-debugging measures
+function Test-Debugger {
+    $isDebugged = $false
+    try {
+        # Check for debugger process
+        if (Test-Path Variable:PSDebugContext) {
+            $isDebugged = $true
+        }
+        
+        # Check for common analysis tools
+        $processes = Get-Process | Select-Object -ExpandProperty ProcessName
+        $debugTools = @('powershell_ise', 'ida', 'ida64', 'dbgview', 'procmon', 'ollydbg', 'x32dbg', 'x64dbg')
+        
+        foreach ($tool in $debugTools) {
+            if ($processes -contains $tool) {
+                $isDebugged = $true
+                break
+            }
+        }
+        
+        # Timing check - detect breakpoints by timing execution
+        $startTime = [System.Diagnostics.Stopwatch]::StartNew()
+        1..1000 | ForEach-Object { $null = Get-Random }
+        $endTime = $startTime.ElapsedMilliseconds
+        
+        # If execution takes too long, might be debugged
+        if ($endTime -gt 100) {
+            $isDebugged = $true
+        }
+    }
+    catch {
+        # Error occurred during checks, assume being debugged
+        $isDebugged = $true
+    }
+    
+    return $isDebugged
+}
+
+if (Test-Debugger) {
+    Write-Error "Security violation detected"
+    Start-Sleep -Seconds 1
+    Exit
+}
+`;
+  }
+
+  // VM detection for PowerShell
+  if (options.additional?.antiVirtualMachine) {
+    obfuscated += `
+# Virtual machine detection
+function Test-VirtualMachine {
+    $isVM = $false
+    
+    try {
+        # Check manufacturer and model
+        $computerSystem = Get-WmiObject -Class Win32_ComputerSystem
+        
+        $vmSignatures = @(
+            "VMware", "VirtualBox", "HVM domU", "KVM", "Bochs", "Xen",
+            "Virtual Machine", "QEMU", "Parallels", "Virtual", "Hyper-V"
+        )
+        
+        foreach ($signature in $vmSignatures) {
+            if ($computerSystem.Manufacturer -like "*$signature*" -or 
+                $computerSystem.Model -like "*$signature*") {
+                $isVM = $true
+                break
+            }
+        }
+        
+        # Check BIOS
+        if (-not $isVM) {
+            $bios = Get-WmiObject -Class Win32_BIOS
+            foreach ($signature in $vmSignatures) {
+                if ($bios.Manufacturer -like "*$signature*" -or 
+                    $bios.SMBIOSBIOSVersion -like "*$signature*" -or
+                    $bios.SerialNumber -like "*$signature*") {
+                    $isVM = $true
+                    break
+                }
+            }
+        }
+        
+        # Check for VM services
+        $vmServices = @(
+            "vmtools", "vm3dservice", "vmware-tools", "vmware-converter",
+            "vboxservice", "vboxtray", "xenservice"
+        )
+        
+        $services = Get-Service | Select-Object -ExpandProperty Name
+        foreach ($service in $vmServices) {
+            if ($services -contains $service) {
+                $isVM = $true
+                break
+            }
+        }
+    }
+    catch {
+        # Error during checks, assume it's legitimate
+        $isVM = $false
+    }
+    
+    return $isVM
+}
+
+if (Test-VirtualMachine) {
+    Write-Host "This script cannot be executed in a virtual environment"
+    Start-Sleep -Seconds 1
+    Exit
+}
+`;
+  }
+
+  // Hardware ID binding
+  if (options.additional?.licenseSystem) {
+    obfuscated += `
+# Hardware ID binding
+function Get-HardwareID {
+    try {
+        # Combine unique system identifiers
+        $cpuInfo = Get-WmiObject -Class Win32_Processor | Select-Object -ExpandProperty ProcessorId
+        $biosInfo = Get-WmiObject -Class Win32_BIOS | Select-Object -ExpandProperty SerialNumber
+        $diskInfo = Get-WmiObject -Class Win32_DiskDrive | Where-Object {$_.DeviceID -like "*0*"} | Select-Object -ExpandProperty SerialNumber
+        $mbInfo = Get-WmiObject -Class Win32_BaseBoard | Select-Object -ExpandProperty SerialNumber
+        
+        # Create composite hardware ID
+        $hwid = "$cpuInfo-$biosInfo-$diskInfo-$mbInfo"
+        $hwid = $hwid -replace '\s+', ''
+        
+        # Generate SHA-256 hash as fingerprint
+        $bytes = [System.Text.Encoding]::UTF8.GetBytes($hwid)
+        $hasher = [System.Security.Cryptography.SHA256]::Create()
+        $hash = $hasher.ComputeHash($bytes)
+        $hashString = [System.BitConverter]::ToString($hash) -replace '-', ''
+        
+        return $hashString
+    }
+    catch {
+        # Return fallback ID if hardware query fails
+        return "ERROR-HWID-GENERATION-FAILED"
+    }
+}
+
+# Authorized hardware fingerprint
+$authorizedHWID = "${options.additional?.encryptionKey || crypto.randomBytes(32).toString('hex')}"
+$currentHWID = Get-HardwareID
+
+if ($authorizedHWID -ne $currentHWID) {
+    Write-Host "This script is not licensed for this hardware configuration"
+    Start-Sleep -Seconds 1
+    Exit
+}
+`;
+  }
+
+  // Apply string encryption if enabled
+  if (options.stringEncryption) {
+    obfuscated += `
+# String decryption engine
+function Decrypt-String {
+    param (
+        [byte[]]$EncryptedBytes,
+        [byte]$Key
+    )
+    
+    $result = New-Object char[] $EncryptedBytes.Length
+    for ($i = 0; $i -lt $EncryptedBytes.Length; $i++) {
+        $result[$i] = [char]($EncryptedBytes[$i] -bxor $Key)
+    }
+    
+    return [string]::new($result)
+}
+
+# String vault
+$strings = @{
+`;
+    
+    // Process strings in the code
+    let stringCount = 0;
+    const stringMap = new Map<string, string>();
+    const key = Math.floor(Math.random() * 255);
+    
+    // Find all string literals and create encrypted versions
+    const stringRegex = /'([^']*)'|"([^"]*)"/g;
+    let match;
+    let processedCode = code;
+    
+    while ((match = stringRegex.exec(code)) !== null) {
+      const stringContent = match[1] || match[2];
+      if (!stringContent || stringContent.length === 0) continue;
+      
+      // Skip strings that are already processed
+      if (stringMap.has(stringContent)) continue;
+      
+      // Create variable name for this string
+      const varName = `s${stringCount++}`;
+      
+      // Encrypt string
+      const encodedBytes = Array.from(stringContent).map(c => (c.charCodeAt(0) ^ key).toString()).join(',');
+      obfuscated += `    ${varName} = @(${encodedBytes})\n`;
+      
+      // Store mapping for replacement
+      stringMap.set(stringContent, varName);
+    }
+    
+    obfuscated += `}
+
+$key = ${key}
+`;
+    
+    // Replace all string literals with decryption calls
+    for (const [original, varName] of stringMap.entries()) {
+      const originalEscaped = original.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+      const regex = new RegExp(`(['"])${originalEscaped}\\1`, 'g');
+      processedCode = processedCode.replace(regex, `(Decrypt-String -EncryptedBytes $strings.${varName} -Key $key)`);
+    }
+    
+    // Add the processed code
+    obfuscated += processedCode;
+  } else {
+    // If no string encryption, just add the original code
+    obfuscated += code;
+  }
+  
+  // Add self-defense mechanisms
+  if (options.level === "maximum" || options.level === "heavy") {
+    obfuscated += `
+
+# Script execution complete
+$script:ExecutionEndTime = Get-Date
+$executionTime = ($script:ExecutionEndTime - $script:ExecutionStartTime).TotalSeconds
+
+# Security verification
+if ($executionTime -lt 0.001) {
+    Write-Error "Execution anomaly detected"
+    Exit
+}
+
+# Runtime cleanup
+Remove-Variable -Name strings -ErrorAction SilentlyContinue
+Remove-Variable -Name key -ErrorAction SilentlyContinue
+[System.GC]::Collect()
+
+# ${crypto.randomBytes(32).toString('hex')}
+`;
+  }
+  
+  return obfuscated;
+}
+
 // Generic obfuscation for other languages (enhanced)
 function obfuscateGeneric(code: string, options: ObfuscationOptions): string {
   // Enhanced obfuscation for other languages
@@ -1727,7 +2197,17 @@ export async function obfuscateCode(
       break;
     case 'csharp':
     case 'cs':
+    case 'dotnet-exe':
+    case 'dotnet-dll':
       obfuscatedCode = obfuscateCSharp(code, options);
+      break;
+    case 'batch':
+    case 'bat':
+      obfuscatedCode = obfuscateBatchFile(code, options);
+      break;
+    case 'powershell':
+    case 'ps1':
+      obfuscatedCode = obfuscatePowerShell(code, options);
       break;
     default:
       obfuscatedCode = obfuscateGeneric(code, options);
