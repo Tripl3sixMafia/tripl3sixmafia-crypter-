@@ -562,6 +562,10 @@ export async function obfuscateCode(
     case 'py':
       obfuscatedCode = obfuscatePython(code, options);
       break;
+    case 'csharp':
+    case 'cs':
+      obfuscatedCode = obfuscateCSharp(code, options);
+      break;
     default:
       obfuscatedCode = obfuscateGeneric(code, options);
   }
