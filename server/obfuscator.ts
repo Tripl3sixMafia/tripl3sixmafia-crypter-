@@ -1048,17 +1048,29 @@ export async function obfuscateCode(
     }));
     
     // Create a new buffer with metadata prepended to the binary data
-    // This simulates adding protection headers to the binary
+    // This adds real protection headers and signatures to the binary
     const metadataSize = Buffer.alloc(4);
     metadataSize.writeUInt32LE(metadata.length, 0);
     
-    // Create the protected binary: [SIGNATURE][METADATA_SIZE][METADATA][ORIGINAL_BINARY_DATA]
-    const signature = Buffer.from('3SIXMAFIA'); // 9 bytes signature
+    // Create the protected binary with our gangster signature
+    // Format: [SIGNATURE][METADATA_SIZE][METADATA][ORIGINAL_BINARY_DATA]
+    const signature = Buffer.from('TRIPL3SIXMAFIA_CRYPTER'); // Gangster signature
+    
+    // Add encryption layer to first 256 bytes of binary for anti-analysis
+    let encryptedBinaryData = Buffer.from(binaryData);
+    
+    // Simple XOR encryption of header portion (first 256 bytes or less)
+    const encryptionKey = Buffer.from('MAFIA666');
+    for (let i = 0; i < Math.min(256, encryptedBinaryData.length); i++) {
+      encryptedBinaryData[i] = encryptedBinaryData[i] ^ encryptionKey[i % encryptionKey.length];
+    }
+    
+    // Create the final protected binary with all layers
     const protectedBinary = Buffer.concat([
       signature, 
       metadataSize,
       metadata,
-      binaryData
+      encryptedBinaryData
     ]);
     
     // Write the protected binary to the output file
@@ -1143,9 +1155,8 @@ export async function obfuscateCode(
   
   // Create download URL for executable if available
   if (executablePath) {
-    // In a real implementation, this would be a proper URL
-    // Here we're just using a placeholder
-    downloadUrl = `/download/${path.basename(executablePath)}`;
+    // Create proper API download URL path
+    downloadUrl = `/api/download/${path.basename(executablePath)}`;
   }
   
   return {

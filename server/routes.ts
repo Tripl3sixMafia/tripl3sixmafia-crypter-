@@ -145,6 +145,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ message: "No source file uploaded" });
       }
       
+      // Enhanced file logging for debugging binary handling
+      const uploadedFile = files.file[0];
+      console.log("Processing uploaded file:", {
+        filename: uploadedFile.originalname,
+        size: uploadedFile.size,
+        path: uploadedFile.path,
+        mimetype: uploadedFile.mimetype
+      });
+      
       const language = req.body.language;
       if (!language) {
         return res.status(400).json({ message: "Language not specified" });
@@ -307,13 +316,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     const fileSizeInBytes = stats.size;
     console.log(`File size: ${fileSizeInBytes} bytes`);
     
+    // Get original file extension
+    const fileExt = path.extname(download.filename).toLowerCase();
+    
+    // Set appropriate content type based on file extension
+    let contentType = 'application/octet-stream';
+    if (fileExt === '.exe') {
+      contentType = 'application/vnd.microsoft.portable-executable';
+    } else if (fileExt === '.dll') {
+      contentType = 'application/x-msdownload';
+    } else if (fileExt === '.bat') {
+      contentType = 'application/x-msdos-program';
+    }
+    
     // Set appropriate headers
     res.setHeader('Content-Disposition', `attachment; filename="${download.filename}"`);
-    res.setHeader('Content-Type', 'application/octet-stream');
+    res.setHeader('Content-Type', contentType);
     res.setHeader('Content-Length', fileSizeInBytes);
     
-    // Add gangster security header for branding
+    // Add gangster security headers for branding
     res.setHeader('X-TRIPL3SIXMAFIA-Protection', 'Maximum Security');
+    res.setHeader('X-TRIPL3SIXMAFIA-Crypter', 'Version 1.2.0');
+    res.setHeader('X-Anti-Analysis', 'Enabled');
+    res.setHeader('X-Protected-By', 'TRIPL3SIXMAFIA');
+    
+    // Log the download for analytics
+    console.log(`TRIPL3SIXMAFIA Protection: Serving protected file ${download.filename} (${fileSizeInBytes} bytes)`);
     
     // Stream the file to the client
     const fileStream = fs.createReadStream(download.path);
@@ -322,7 +350,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Error downloading file" });
     });
     
-    console.log(`Streaming protected file to client: ${download.filename}`);
+    console.log(`Streaming protected binary to client: ${download.filename}`);
     fileStream.pipe(res);
   });
   
