@@ -113,7 +113,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Health check endpoint for deployment monitoring
-  app.get('/health', (req, res) => {
+  app.get('/api/health', (req, res) => {
     res.status(200).json({
       status: 'up',
       timestamp: new Date().toISOString(),
@@ -122,6 +122,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       hostname: os.hostname(),
       message: "TRIPL3SIXMAFIA CRYPTER running strong 🔥"
     });
+  });
+  
+  // Legacy health check endpoint
+  app.get('/health', (req, res) => {
+    res.redirect('/api/health');
   });
 
   const httpServer = createServer(app);

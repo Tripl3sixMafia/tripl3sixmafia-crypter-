@@ -6,18 +6,20 @@ services:
     startCommand: node dist/index.js
     region: oregon 
     plan: free
-    healthCheckPath: /
+    healthCheckPath: /api/health
     healthCheckTimeout: 5
     numInstances: 1
     envVars:
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: 8080
     autoDeploy: true
 
   - type: static
     name: tripl3sixmafia-crypter-static
     buildCommand: npm install && npm run build
-    publishDir: ./client/dist
+    publishDir: dist/public
     routes:
       - type: rewrite
         source: /*

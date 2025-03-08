@@ -29,9 +29,26 @@ export NODE_ENV=production
 echo "🔧 Setting permissions..."
 chmod -R 755 dist
 
-# Create log directory for LemeHost
+# Create log directory
 mkdir -p logs
 chmod 755 logs
+
+# Special setup for Render
+if [ "$HOST_ENV" = "Render" ]; then
+  echo "☁️ Setting up for Render deployment..."
+  # Create a .env file for production if it doesn't exist
+  if [ ! -f .env ]; then
+    echo "Creating production .env file..."
+    cp .env.template .env
+  fi
+  
+  # Ensure static assets are properly configured
+  echo "Configuring static assets for Render..."
+  mkdir -p dist/public
+  
+  # Create a simple verification file
+  echo '{"status":"OK","service":"tripl3sixmafia-crypter-api"}' > dist/public/status.json
+fi
 
 # Create backup of the build for LemeHost deployment
 if [ "$HOST_ENV" = "LemeHost" ]; then
