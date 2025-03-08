@@ -327,22 +327,37 @@ export default function Home() {
       return;
     }
 
+    console.log("File being submitted:", file.name, file.type, file.size);
+    
     const formData = new FormData();
-    formData.append("file", file);
+    // Ensure the file is appended with the correct field name (must match what the server expects)
+    formData.append("file", file, file.name);
     formData.append("language", detectedLanguage || selectedLanguage);
     formData.append("options", JSON.stringify(options));
     formData.append("outputOptions", JSON.stringify(outputOptions));
     
+    // Debug the form data
+    console.log("File appended to FormData");
+    console.log("Language:", detectedLanguage || selectedLanguage);
+    
     if (customIcon && options.additional?.customIcon) {
-      formData.append("icon", customIcon);
+      formData.append("icon", customIcon, customIcon.name);
+      console.log("Icon appended:", customIcon.name);
     }
 
     // Add file spoofing options if enabled
     if (spoofingEnabled && selectedSpoofType) {
       formData.append("spoofing", "true");
       formData.append("spoofType", selectedSpoofType);
+      console.log("File spoofing enabled:", selectedSpoofType);
     }
 
+    // Submit the form data
+    toast({
+      title: "Processing file",
+      description: "Sending " + file.name + " for obfuscation...",
+    });
+    
     obfuscationMutation.mutate(formData);
   };
 

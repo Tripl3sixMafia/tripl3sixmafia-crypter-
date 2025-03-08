@@ -63,6 +63,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const upload = multer({ 
     storage: multer.diskStorage({
       destination: (req, file, cb) => {
+        console.log("Processing file:", file.fieldname, file.originalname);
+        
         if (file.fieldname === 'icon') {
           cb(null, iconsDir);
         } else {
@@ -88,18 +90,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const randomBytes = crypto.randomBytes(16).toString('hex');
         const timestamp = Date.now();
         
-        cb(null, `${safeOriginalName}_${timestamp}_${randomBytes}${fileExt}`);
+        const newFilename = `${safeOriginalName}_${timestamp}_${randomBytes}${fileExt}`;
+        console.log("Generated filename:", newFilename);
+        
+        cb(null, newFilename);
       }
     }),
     limits: {
       fileSize: 50 * 1024 * 1024, // Increased to 50MB limit for bigger executables
     },
     fileFilter: (req, file, cb) => {
+      // Log the file information
+      console.log("File filter processing:", file.fieldname, file.originalname, file.mimetype);
+      
       // Check file extension against allowed types
       const ext = path.extname(file.originalname).toLowerCase();
       const allowedExtensions = [
         '.js', '.ts', '.py', '.java', '.cs', '.cpp', '.c', '.php', 
-        '.go', '.rs', '.swift', '.exe', '.dll', '.bat', '.ico', '.png'
+        '.go', '.rs', '.swift', '.exe', '.dll', '.bat', '.ico', '.png',
+        '.jpg', '.jpeg', '.txt', '.ps1', '.vbs'
       ];
       
       if (file.fieldname === 'icon') {
@@ -112,6 +121,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Accept the file if it's in our allowed list
         return cb(null, true);
       } else {
+        console.log("Rejected file type:", ext);
         cb(new Error(`Unsupported file type: ${ext}. Please upload a supported file type.`));
       }
     }
@@ -123,10 +133,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
     { name: 'icon', maxCount: 1 }
   ]), async (req, res) => {
     try {
+      // Debug what was received
+      console.log("Request body keys:", Object.keys(req.body));
+      console.log("Files received:", req.files ? Object.keys(req.files) : "No files");
+      
       // Validate input
       const files = req.files as { [fieldname: string]: Express.Multer.File[] };
       
       if (!files || !files.file || files.file.length === 0) {
+        console.log("No source file uploaded - req.files:", files);
         return res.status(400).json({ message: "No source file uploaded" });
       }
       

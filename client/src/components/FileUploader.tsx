@@ -50,7 +50,11 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
       return;
     }
 
+    // Debug file information
+    console.log("Selected file:", file.name, file.type, file.size);
+    
     const fileExtension = "." + file.name.split(".").pop()?.toLowerCase();
+    console.log("File extension:", fileExtension);
     
     if (!allSupportedExtensions.includes(fileExtension)) {
       toast({
@@ -69,6 +73,8 @@ export default function FileUploader({ selectedLanguage, onFileChange }: FileUpl
 
     setFileName(file.name);
     setFileSize(formatFileSize(file.size));
+    
+    // Pass the file to the parent component
     onFileChange(file);
     
     // Different toast messages based on file type
