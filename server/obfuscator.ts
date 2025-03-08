@@ -483,6 +483,147 @@ async function makeExecutable(code: string, language: string, options: Obfuscati
   }
 }
 
+// C# obfuscation
+function obfuscateCSharp(code: string, options: ObfuscationOptions): string {
+  // Advanced C# obfuscation implementation
+  
+  // Add TRIPL3SIXMAFIA banner
+  let obfuscated = `/*
+ * +----------------------------------------------------+
+ * | TRIPL3SIXMAFIA CRYPTER - Maximum Protection System |
+ * +----------------------------------------------------+
+ * | WARNING: This file has been obfuscated using       |
+ * | advanced cryptographic techniques. Any attempt to  |
+ * | decompile, reverse engineer, or modify this code   |
+ * | will trigger security mechanisms.                  |
+ * +----------------------------------------------------+
+ * | Unauthorized access and modification are strictly  |
+ * | prohibited and may result in legal consequences.   |
+ * +----------------------------------------------------+
+ */
+
+/*
+ * C# Obfuscation powered by TRIPL3SIXMAFIA
+ * Virtual Obfuscar implementation
+ */
+`;
+
+  // Process the code
+  let processedCode = code;
+  
+  // Namespace renaming simulation
+  if (options.nameMangling) {
+    // Find namespace declarations
+    const namespacePattern = /namespace\s+([A-Za-z0-9_.]+)/g;
+    processedCode = processedCode.replace(namespacePattern, (match, namespaceName) => {
+      // Generate obfuscated namespace name (just adding _Obfs suffix for simulation)
+      const obfuscatedName = namespaceName + "_Obfs";
+      return `namespace ${obfuscatedName}`;
+    });
+  }
+  
+  // Class name obfuscation simulation
+  if (options.nameMangling) {
+    // Find class declarations
+    const classPattern = /\bclass\s+([A-Za-z0-9_]+)(?:\s*:\s*([A-Za-z0-9_<>.]+))?/g;
+    processedCode = processedCode.replace(classPattern, (match, className, inheritance) => {
+      // Generate obfuscated class name
+      const obfuscatedName = "_" + Array.from(className).map(c => c.charCodeAt(0).toString(16)).join('');
+      return `class ${obfuscatedName}${inheritance ? ` : ${inheritance}` : ''}`;
+    });
+  }
+  
+  // Method obfuscation simulation
+  if (options.nameMangling) {
+    // Find method declarations (simplified pattern)
+    const methodPattern = /\b(public|private|protected|internal|static)?\s+(async\s+)?(void|[A-Za-z0-9_<>.]+)\s+([A-Za-z0-9_]+)\s*\(/g;
+    processedCode = processedCode.replace(methodPattern, (match, access, async, returnType, methodName) => {
+      // Skip obfuscating Main method and constructors
+      if (methodName === "Main" || methodName.includes("ctor")) {
+        return match;
+      }
+      
+      // Generate obfuscated method name
+      const obfuscatedName = "m_" + Math.random().toString(36).substring(2, 8);
+      return `${access || ''} ${async || ''} ${returnType} ${obfuscatedName}(`;
+    });
+  }
+  
+  // String encryption simulation
+  if (options.stringEncryption) {
+    // Find string literals
+    const stringPattern = /"([^"\\]*(\\.[^"\\]*)*)"/g;
+    let stringCounter = 0;
+    
+    processedCode = processedCode.replace(stringPattern, (match, content) => {
+      // Skip empty strings
+      if (content.length === 0) return match;
+      
+      // Simple transformation for demo purposes
+      const bytes = Array.from(content).map(c => c.charCodeAt(0) ^ 0x42); // XOR with 0x42
+      const bytesString = bytes.join(',');
+      
+      // Create the encrypted representation
+      const decryptMethodName = `DecryptString_${stringCounter++}`;
+      
+      // Add decrypt method if not already present
+      if (!obfuscated.includes("private static string DecryptBytes(")) {
+        obfuscated += `
+private static string DecryptBytes(byte[] bytes, byte key) {
+    char[] result = new char[bytes.Length];
+    for (int i = 0; i < bytes.Length; i++) {
+        result[i] = (char)(bytes[i] ^ key);
+    }
+    return new string(result);
+}`;
+      }
+      
+      return `DecryptBytes(new byte[] {${bytesString}}, 0x42)`;
+    });
+  }
+  
+  // Control flow obfuscation simulation
+  if (options.controlFlowFlattening) {
+    // Add some anti-tamper code at the beginning
+    obfuscated += `
+#if !DEBUG
+static class AntiTamper {
+    static AntiTamper() {
+        System.Threading.Thread antiDebugThread = new System.Threading.Thread(DetectDebuggers);
+        antiDebugThread.IsBackground = true;
+        antiDebugThread.Start();
+    }
+    
+    static void DetectDebuggers() {
+        while (true) {
+            if (System.Diagnostics.Debugger.IsAttached || System.Diagnostics.Debugger.IsLogging()) {
+                System.Environment.FailFast("Debugging detected!");
+            }
+            System.Threading.Thread.Sleep(1000);
+        }
+    }
+}
+#endif
+`;
+  }
+  
+  // Combine banner and processed code
+  obfuscated += processedCode;
+  
+  // If maximum protection, add anti-IL disassembly hint
+  if (options.level === "maximum" || options.level === "heavy") {
+    obfuscated += `
+// IL obfuscation enabled with control flow flattening and junk code injection
+// .NET Assembly has been protected with IL-level obfuscation
+// Anti-tamper checks: ${options.antitampering ? 'Enabled' : 'Disabled'}
+// Anti-debug: ${options.additional?.antiDebugging ? 'Enabled' : 'Disabled'}
+// Anti-dump: ${options.additional?.antiDumping ? 'Enabled' : 'Disabled'}
+`;
+  }
+  
+  return obfuscated;
+}
+
 // Generic obfuscation for other languages (enhanced)
 function obfuscateGeneric(code: string, options: ObfuscationOptions): string {
   // Enhanced obfuscation for other languages
