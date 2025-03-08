@@ -59,23 +59,61 @@ setInterval(() => {
 }, 60 * 60 * 1000); // Run every hour
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Configure multer for memory storage
+  // Configure multer for file storage with enhanced security
   const upload = multer({ 
     storage: multer.diskStorage({
       destination: (req, file, cb) => {
         if (file.fieldname === 'icon') {
           cb(null, iconsDir);
         } else {
-          cb(null, tempDir);
+          // For executable files (.exe, .dll, .bat), use a more secure directory
+          const ext = path.extname(file.originalname).toLowerCase();
+          if (['.exe', '.dll', '.bat'].includes(ext)) {
+            const secureExeDir = path.join(tempDir, 'secured-binaries');
+            if (!fs.existsSync(secureExeDir)) {
+              fs.mkdirSync(secureExeDir, { recursive: true });
+            }
+            cb(null, secureExeDir);
+          } else {
+            cb(null, tempDir);
+          }
         }
       },
       filename: (req, file, cb) => {
-        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-        cb(null, uniqueSuffix + '-' + file.originalname);
+        // Generate a cryptographically secure filename to prevent path traversal attacks
+        const fileExt = path.extname(file.originalname);
+        const safeOriginalName = path.basename(file.originalname, fileExt)
+          .replace(/[^a-zA-Z0-9]/g, '_'); // Sanitize the original filename
+        
+        const randomBytes = crypto.randomBytes(16).toString('hex');
+        const timestamp = Date.now();
+        
+        cb(null, `${safeOriginalName}_${timestamp}_${randomBytes}${fileExt}`);
       }
     }),
     limits: {
-      fileSize: 10 * 1024 * 1024, // 10MB limit
+      fileSize: 50 * 1024 * 1024, // Increased to 50MB limit for bigger executables
+    },
+    fileFilter: (req, file, cb) => {
+      // Check file extension against allowed types
+      const ext = path.extname(file.originalname).toLowerCase();
+      const allowedExtensions = [
+        '.js', '.ts', '.py', '.java', '.cs', '.cpp', '.c', '.php', 
+        '.go', '.rs', '.swift', '.exe', '.dll', '.bat', '.ico', '.png'
+      ];
+      
+      if (file.fieldname === 'icon') {
+        // For icons, only allow image files
+        if (['.ico', '.png', '.jpg', '.jpeg'].includes(ext)) {
+          return cb(null, true);
+        }
+        cb(new Error('Only .ico, .png, .jpg, and .jpeg files are allowed for icons'));
+      } else if (allowedExtensions.includes(ext)) {
+        // Accept the file if it's in our allowed list
+        return cb(null, true);
+      } else {
+        cb(new Error(`Unsupported file type: ${ext}. Please upload a supported file type.`));
+      }
     }
   });
   
@@ -280,15 +318,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       fs.unlinkSync(req.file.path);
       
       // Check file size
-      if (fileSize > 10 * 1024 * 1024) { // 10MB
+      if (fileSize > 50 * 1024 * 1024) { // 50MB - increased for larger executables
         return res.status(400).json({ 
           valid: false,
-          message: "File size exceeds the 10MB limit" 
+          message: "File size exceeds the 50MB limit" 
         });
       }
       
       // Get language from file extension
       const extensionToLanguage: Record<string, string> = {
+        // Source code languages
         'js': 'javascript',
         'ts': 'typescript',
         'py': 'python',
@@ -296,8 +335,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
         'cs': 'csharp',
         'cpp': 'cpp',
         'c': 'c',
-        'exe': 'executable',
-        'dll': 'dll'
+        
+        // Executable and .NET specific formats
+        'exe': 'dotnet-exe',  // Consider all .exe files as .NET executables
+        'dll': 'dotnet-dll',
+        'bat': 'batch',
+        
+        // Advanced protection formats
+        'ps1': 'powershell',
+        'vbs': 'vbscript'
         // Add more mappings as needed
       };
       
