@@ -177,7 +177,30 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Get code from file
       const sourceFile = files.file[0];
-      const originalCode = fs.readFileSync(sourceFile.path, 'utf-8');
+      
+      // Check if it's a binary file or text file
+      const isBinary = ['.exe', '.dll', '.bin', '.sys', '.ocx'].includes(
+        path.extname(sourceFile.originalname).toLowerCase()
+      );
+      
+      let originalCode;
+      if (isBinary) {
+        // For binary files, we'll pass the file path instead of the content
+        originalCode = sourceFile.path;
+      } else {
+        // For text files, read as normal
+        originalCode = fs.readFileSync(sourceFile.path, 'utf-8');
+      }
+      
+      // Add file info to options for proper handling
+      options.fileInfo = {
+        isBinary,
+        originalName: sourceFile.originalname,
+        originalPath: sourceFile.path,
+        mimeType: sourceFile.mimetype,
+        size: sourceFile.size,
+        extension: path.extname(sourceFile.originalname).toLowerCase()
+      };
       
       // Obfuscate code
       const result = await obfuscateCode(originalCode, language, options, outputOptions);

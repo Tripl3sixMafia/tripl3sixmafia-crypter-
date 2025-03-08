@@ -50,6 +50,16 @@ export const additionalProtectionsSchema = z.object({
   encryptionKey: z.string().optional(),
 });
 
+// File info schema for binary files
+export const fileInfoSchema = z.object({
+  isBinary: z.boolean().default(false),
+  originalName: z.string(),
+  originalPath: z.string(),
+  mimeType: z.string(),
+  size: z.number(),
+  extension: z.string()
+});
+
 // Schema for obfuscation options
 export const obfuscationOptionsSchema = z.object({
   level: z.enum(["light", "medium", "heavy", "custom", "maximum"]),
@@ -70,6 +80,7 @@ export const obfuscationOptionsSchema = z.object({
   autoDetectLanguage: z.boolean().default(true),
   makeExecutable: z.boolean().default(false),
   additional: z.lazy(() => additionalProtectionsSchema).optional(),
+  fileInfo: fileInfoSchema.optional()
 });
 
 // Schema for file output options
@@ -105,3 +116,4 @@ export type ObfuscationOptions = z.infer<typeof obfuscationOptionsSchema>;
 export type ObfuscationResult = z.infer<typeof obfuscationResultSchema>;
 export type AdditionalProtections = z.infer<typeof additionalProtectionsSchema>;
 export type OutputOptions = z.infer<typeof outputOptionsSchema>;
+export type FileInfo = z.infer<typeof fileInfoSchema>;
