@@ -9,10 +9,15 @@ import os from "os";
 
 const execPromise = promisify(exec);
 const tempDir = path.join(os.tmpdir(), 'tripl3sixmafia-crypter');
+const executablesDir = path.join(tempDir, 'executables');
 
-// Make sure temp directory exists
+// Make sure temp directories exist
 if (!fs.existsSync(tempDir)) {
   fs.mkdirSync(tempDir, { recursive: true });
+}
+
+if (!fs.existsSync(executablesDir)) {
+  fs.mkdirSync(executablesDir, { recursive: true });
 }
 
 // Helper function to get protection level string
@@ -1067,12 +1072,12 @@ export async function obfuscateCode(
       if (options.additional.antiDebugging) console.log("- Anti-debugging mechanisms");
       if (options.additional.antiDumping) console.log("- Anti-memory dumping");
       if (options.additional.antiVirtualMachine) console.log("- VM detection and evasion");
-      
-      // In a real implementation, these would modify the binary further
-      obfuscatedSize = protectedBinary.length;
-    } else {
-      obfuscatedSize = protectedBinary.length;
     }
+    
+    // Set the obfuscated size to the binary size instead of calculating from the code reference string
+    // This will be used later in the function return
+    obfuscatedCode = `TRIPL3SIXMAFIA_PROTECTED_BINARY:${protectedFilename}`;
+    const codeSize = protectedBinary.length;
   } else {
     // For text-based code files, proceed with normal obfuscation
     originalSize = Buffer.byteLength(code, 'utf8');
@@ -1122,7 +1127,11 @@ export async function obfuscateCode(
     }
   }
   
-  const obfuscatedSize = Buffer.byteLength(obfuscatedCode, 'utf8');
+  // For binary files, we already calculated the size earlier
+  const obfuscatedSize = isBinary && typeof codeSize !== 'undefined' 
+    ? codeSize 
+    : Buffer.byteLength(obfuscatedCode, 'utf8');
+  
   const compressionRatio = calculateCompressionRatio(originalSize, obfuscatedSize);
   const protectionLevel = getProtectionLevel(options);
   const appliedTechniques = getAppliedTechniques(options);
