@@ -16,10 +16,11 @@ services:
         value: 8080
     autoDeploy: true
 
-  - type: static
+  - type: web
     name: tripl3sixmafia-crypter-static
+    env: static
     buildCommand: npm install && npm run build
-    publishDir: dist/public
+    staticPublishPath: dist/public
     routes:
       - type: rewrite
         source: /*
